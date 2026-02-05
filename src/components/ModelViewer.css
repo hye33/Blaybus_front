@@ -1,0 +1,95 @@
+.viewer {
+    width: 100%;
+    height: 100%;
+    background-color: #18181A;
+    border: 1px solid #78E875;
+    border-radius: 10px;
+    box-shadow: 0 0px 12px rgba(120, 232, 117, 0.5);
+    position: relative;
+}
+
+.range-container {
+    position: absolute;
+    bottom: 20px;
+    right: 40px;
+    width: 404px;
+    height: 44px;
+    color: #78E875;
+    background: linear-gradient(135deg,
+                #78E8750d,
+                #F88CDC0d);
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.rotation-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+}
+
+/* Chrome / Edge / Safari */
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #f88cdc;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Firefox */
+.range-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #f88cdc;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.range-slider {
+    width: 200px;
+}
+
+.reset-button {
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    z-index: 10;
+}
+
+.zoom-button {
+    position: absolute;
+    left: 40px;
+    width: 37px;
+    height: 37px;
+    background-color: #2f242d;
+    color: #f88cdc;
+    font-size: 25px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zoom-in-button {
+    bottom: 80px;
+}
+
+.zoom-out-button {
+    bottom: 30px;
+}
+
+.description-button {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    z-index: 10;
+}
