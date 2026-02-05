@@ -1,3 +1,9 @@
 .nav {
   width: 100%;
 }
+
+.app-layout {
+  padding-left: 240px;
+  padding-right: 240px;
+  box-sizing: border-box;
+}
