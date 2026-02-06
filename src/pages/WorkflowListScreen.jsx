@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, useRef } from 'react'
 import html2canvas from 'html2canvas'
 import '../styles/WorkflowListScreen.css'
 import { update } from 'three/examples/jsm/libs/tween.module.js'
+import chevronDown from '../assets/chevron-down.png'
 
 const LIST_KEY = 'workflows:index'
 
@@ -173,9 +174,11 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
     setDeleteTarget(null);
     };
 
+  const isModalOpen = createOpen || !!renameTarget || !!deleteTarget
+
   return (
     <section className="wfl">
-        <div className="wfl__frame">
+        <div className={`wfl__frame ${isModalOpen ? 'is-blurred' : ''}`}>
             <header className="wfl__header">
                 <div className='wfl__sort wfl__menuWrap' ref={sortRef}>
                     <button
@@ -187,22 +190,7 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
                         type='button'
                     >
                         <span className='wfl__sortLabel'>{sortLabel}</span>
-                        <svg
-                            className={`wfl__sortArrow ${sortOpen ? 'is-open' : ''}`}
-                            width="12"
-                            height="6"
-                            viewBox='0 0 12 6'
-                            fill='none'
-                            xmlns='https://www.w3.org/2000/svg'
-                        >
-                                <path
-                                    d="M1 1 L6 5 L11 1"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                        </svg>
+                        <img src={chevronDown} alt="정렬 화살표" className={`wfl__sortArrow ${sortOpen ? 'is-open' : ''}`} />
                     </button>
 
                     {sortOpen && (
@@ -370,14 +358,6 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
             <span className="wfl__warnIcon">!</span>
             경고
             </div>
-            {/* <button
-            type="button"
-            className="wfl__modalClose"
-            onClick={() => setDeleteTarget(null)}
-            aria-label="닫기"
-            >
-            ×
-            </button> */}
         </div>
 
         <div className="wfl__modalBody wfl__modalBodyCenter">

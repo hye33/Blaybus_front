@@ -1,9 +1,3 @@
-// import React from 'react'
-
-// export default function WorkflowScreen() {
-//     return <div>Workflow Screen</div>
-// }
-
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import {
   ReactFlow,
@@ -18,156 +12,282 @@ import {
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import '../styles/WorkflowScreen.css'
+import folderPlus from '../assets/folder-plus.png'
 
-const STORAGE_KEY = 'my-react-flow-app-nodes-edges'
+const LIST_KEY = 'workflows:index'
+
+function loadWorkflowList() {
+  try {
+    const raw = localStorage.getItem(LIST_KEY)
+    return raw ? JSON.parse(raw) : []
+  } catch {
+    return []
+  }
+}
 
 const initialNodes = [
-  { id: 'n1', type: 'textUpdater', position: { x: 0, y: 0 }, data: { label: 'Node 9000', value: 'hello' } },
-  { id: 'n2', position: { x: 0, y: 100 }, data: { label: 'Node 2' } },
   {
-    id: 'n3',
+    id: 'n1',
     type: 'textUpdater',
-    position: { x: 0, y: 240 },
-    data: { label: 'Impellar Blade', value: '회전 시 공기를 밀어 추력을 발생시키는 블레이드 부품. 드론 비행에 필요한 양력을 생성.' },
+    position: { x: 80, y: 120 },
+    data: { title: '소제목', body: '내용 입력하는 부분', fileName: '' },
+  },
+  {
+    id: 'n2',
+    type: 'textUpdater',
+    position: { x: 520, y: 120 },
+    data: { title: '소제목', body: '내용 입력하는 부분', fileName: '파일명.pdf' },
   },
 ]
-const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2', type: 'step', label: '노드 중간 텍스트 입력' }]
 
-function localFromLocalStorage() {
+const initialEdges = [
+  { id: 'e1-2', source: 'n1', target: 'n2', type: 'smoothstep' },
+]
+
+function loadFromLocalStorage(key) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(key)
     if (!raw) return null
     const parsed = JSON.parse(raw)
-    if (!parsed.nodes || !parsed.edges) return null
+    if (!parsed?.nodes || !parsed?.edges) return null
     return parsed
   } catch {
     return null
   }
 }
 
-function saveToLocalStorage(doc) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(doc))
+function saveToLocalStorage(key, doc) {
+  localStorage.setItem(key, JSON.stringify(doc))
 }
 
-export default function WorkflowScreen({workflowId, onBack}) {
-  const STORAGE_KEY = `workflow:${workflowId}`
-  const saved = useMemo(() => localFromLocalStorage(), [])
+export default function WorkflowScreen({ workflowId, onGoWorkflowList, onOpenWorkflow }) {
+  const storageKey = `workflow:${workflowId}`
+
+  const [wfMenuOpen, setWfMenuOpen] = useState(false);
+  const wfMenuRef = useRef(null)
+  
+  const workflowList = useMemo(() => loadWorkflowList(), [])
+  const currentWfName = useMemo(() => {
+    return workflowList.find((wf) => wf.id === workflowId)?.name ?? '워크플로우'
+}, [workflowId, workflowList])
+
+useEffect(() => {
+    const onDown = (e) => {
+        if (wfMenuRef.current && !wfMenuRef.current.contains(e.target)) {
+            setWfMenuOpen(false)
+        }
+    }
+
+    document.addEventListener('mousedown', onDown)
+    return () => document.removeEventListener('mousedown', onDown)
+}, [])
+  
+  const saved = useMemo(() => loadFromLocalStorage(storageKey), [storageKey])
   const [nodes, setNodes] = useState(saved?.nodes ?? initialNodes)
   const [edges, setEdges] = useState(saved?.edges ?? initialEdges)
+
+  const addNewNode = useCallback(() => {
+  const newId = `n-${Date.now()}`
+  setNodes((ns) => {
+    // 가장 아래쪽에 추가
+    const maxY = ns.reduce((m, n) => Math.max(m, n.position?.y ?? 0), 0)
+    return [
+      ...ns,
+      {
+        id: newId,
+        type: 'textUpdater',
+        position: { x: 80, y: maxY + 220 },
+        data: { title: '소제목', body: '내용 입력하는 부분', fileName: '' },
+      },
+    ]
+  })
+}, [])
+
+  const defaultEdgeOptions = useMemo(
+    () => ({
+      type: 'smoothstep',
+      style: { stroke: 'var(--pink-main)', strokeWidth: 2 },
+    }),
+    []
+  )
+
+  const connectionLineStyle = useMemo(
+    () => ({ stroke: 'var(--pink-main)', strokeWidth: 2 }),
+    []
+  )
 
   const onNodesChange = useCallback(
     (changes) => setNodes((snap) => applyNodeChanges(changes, snap)),
     []
   )
+
   const onEdgesChange = useCallback(
     (changes) => setEdges((snap) => applyEdgeChanges(changes, snap)),
     []
   )
+
   const onConnect = useCallback(
-    (params) => setEdges((snap) => addEdge(params, snap)),
+    (params) => setEdges((snap) => addEdge({ ...params, type: 'smoothstep' }, snap)),
     []
   )
 
-  const onChangeNodeValue = useCallback((id, value) => {
+  // 노드 텍스트 변경
+  const onChangeNodeField = useCallback((id, patch) => {
     setNodes((ns) =>
-      ns.map((node) => (node.id === id ? { ...node, data: { ...node.data, value } } : node))
+      ns.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...patch } } : n))
     )
   }, [])
 
-  const onUploadFile = useCallback((event) => {
-    const file = event.target.files?.[0]
+  // 노드별 파일 업로드
+  const onUploadFileForNode = useCallback((nodeId, file) => {
     if (!file) return
-
-    const newId = `file-${Date.now()}`
-
-    setNodes((ns) => {
-      const maxY = ns.reduce((m, n) => Math.max(m, n.position?.y ?? 0), 0)
-      return [
-        ...ns,
-        {
-          id: newId,
-          type: 'fileNode',
-          position: { x: 0, y: maxY + 120 },
-          data: { label: file.name, fileName: file.name, value: '' },
-        },
-      ]
-    })
-
-    event.target.value = ''
-  }, [])
+    // 파일 자체는 저장 안 하고 이름만 저장
+    onChangeNodeField(nodeId, { fileName: file.name })
+  }, [onChangeNodeField])
 
   const nodeTypes = useMemo(
     () => ({
-      textUpdater: (props) => <TextUpdaterNode {...props} onChangeNodeValue={onChangeNodeValue} />,
-      fileNode: (props) => <FileNode {...props} onChangeNodeValue={onChangeNodeValue} />,
+      textUpdater: (props) => (
+        <CardNode
+          {...props}
+          onChangeNodeField={onChangeNodeField}
+          onUploadFileForNode={onUploadFileForNode}
+        />
+      ),
     }),
-    [onChangeNodeValue]
+    [onChangeNodeField, onUploadFileForNode]
   )
 
+  // 저장(디바운스)
   const saveTimer = useRef(null)
   useEffect(() => {
     const doc = { nodes, edges, meta: { updatedAt: new Date().toISOString(), schemaVersion: 1 } }
     if (saveTimer.current) clearTimeout(saveTimer.current)
-    saveTimer.current = setTimeout(() => saveToLocalStorage(doc), 400)
+    saveTimer.current = setTimeout(() => saveToLocalStorage(storageKey, doc), 400)
     return () => saveTimer.current && clearTimeout(saveTimer.current)
-  }, [nodes, edges])
+  }, [nodes, edges, storageKey])
 
   return (
     <section className="wf">
-      {/* 상단 업로드 바 */}
-      <div className="wf__toolbar">
-        <label className="wf__label">파일 업로드</label>
-        <input className="wf__file" type="file" onChange={onUploadFile} />
-      </div>
+      <div className="wf__frame">
+        <div className='wfTop'>
+            <button
+            type='button'
+                className="wfTop__back"
+                onClick={() => onGoWorkflowList?.()}
+                aria-label='워크플로우'
+            >
+                <span className='wfTop__backIcon' aria-hidden='true'>ㄴ</span>
+            </button>
 
-      <div className="wf__canvas">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          nodeTypes={nodeTypes}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          fitView
-        >
-          <MiniMap />
-          <Controls />
-          <Background />
-        </ReactFlow>
+            <div className='wfTop__menuWrap' ref={wfMenuRef}>
+                <button
+                    type='button'
+                    className='wfTop__menuBtn'
+                    onClick={() => setWfMenuOpen((v) => !v)}
+                >
+                    <span className='wfTop__arrow' aria-hidden='true'></span>
+                    <span className='wfTop__label'>{currentWfName}</span>
+                </button>
+
+                {wfMenuOpen && (
+                  <div className="wfTop__menu">
+                    {workflowList.map((wf) => (
+                      <button
+                        key={wf.id}
+                        type="button"
+                        className={`wfTop__item ${wf.id === workflowId ? 'is-active' : ''}`}
+                        onClick={() => {
+                          setWfMenuOpen(false)
+                          if (wf.id !== workflowId) onOpenWorkflow?.(wf.id)
+                        }}
+                      >
+                        {wf.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+            </div>
+
+            <button
+                type='button'
+                className='wfTop__addBtn'
+                onClick={() => addNewNode()}
+                aria-label='노드 추가'
+            >
+                +
+            </button>
+        </div>
+                
+        <div className="wf__canvas">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            nodeTypes={nodeTypes}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            fitView
+            defaultEdgeOptions={defaultEdgeOptions}
+            connectionLineStyle={connectionLineStyle}
+          >
+            <MiniMap />
+            <Controls />
+            <Background />
+          </ReactFlow>
+        </div>
       </div>
     </section>
   )
 }
 
-function TextUpdaterNode({ id, data, onChangeNodeValue }) {
-  const onChange = useCallback((e) => onChangeNodeValue(id, e.target.value), [id, onChangeNodeValue])
+/* 노드 컴포넌트 */
+function CardNode({ id, data, onChangeNodeField, onUploadFileForNode }) {
+  const fileInputId = `file-input-${id}`
 
   return (
-    <div style={nodeBoxStyle}>
-      <div style={{ fontWeight: 700, marginBottom: 8 }}>{data?.label ?? 'Untitled'}</div>
-      <input type="text" value={data?.value ?? ''} onChange={onChange} placeholder="텍스트 입력..." style={{ width: '100%' }} />
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
-    </div>
-  )
-}
+    <div className="wfNode">
+      {/* 타이틀 */}
+      <input
+        className="wfNode__title nodrag"
+        value={data?.title ?? ''}
+        onChange={(e) => onChangeNodeField(id, { title: e.target.value })}
+        placeholder="소제목"
+      />
 
-function FileNode({ id, data, onChangeNodeValue }) {
-  const onChange = useCallback((e) => onChangeNodeValue(id, e.target.value), [id, onChangeNodeValue])
+      {/* 바디 */}
+      <textarea
+        className="wfNode__body nodrag"
+        value={data?.body ?? ''}
+        onChange={(e) => onChangeNodeField(id, { body: e.target.value })}
+        placeholder="내용 입력하는 부분"
+        rows={3}
+      />
 
-  return (
-    <div style={{ ...nodeBoxStyle, minWidth: 220 }}>
-      <div style={{ fontWeight: 800, marginBottom: 6 }}>파일명: {data?.fileName ?? '-'}</div>
-      <input type="text" value={data?.value ?? ''} onChange={onChange} placeholder="메모 입력..." style={{ width: '100%' }} />
+      {/* 하단 바: 아이콘 + 파일명 */}
+      <div className="wfNode__footer">
+        <label className="wfNode__iconBtn nodrag" htmlFor={fileInputId} title="파일 추가">
+            <img className="wfNode__iconImg" src={folderPlus} alt="" />
+        </label>
+
+        <input
+          id={fileInputId}
+          className="wfNode__fileInput nodrag"
+          type="file"
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            onUploadFileForNode(id, file)
+            e.target.value = ''
+          }}
+        />
+
+        <div className="wfNode__fileName">
+          {data?.fileName ? data.fileName : '파일명.pdf'}
+        </div>
+      </div>
+
       <Handle type="target" position={Position.Left} />
       <Handle type="source" position={Position.Right} />
     </div>
   )
-}
-
-const nodeBoxStyle = {
-  padding: 12,
-  border: '1px solid #aaa',
-  borderRadius: 10,
-  background: 'white',
 }

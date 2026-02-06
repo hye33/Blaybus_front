@@ -36,7 +36,11 @@ function App() {
         {tab === 2 && (
           workflowView === 'list'
           ? <WorkflowListScreen onOpenWorkflow={openWorkflow} />
-          : <WorkflowScreen worflowId={activeWorkflowId} onBack={backToWorkflowList} />
+          : (<WorkflowScreen
+              workflowId={activeWorkflowId}
+              onGoWorkflowList={backToWorkflowList}
+              onOpenWorkflow={openWorkflow}
+            />)
         )}
         {tab === 3 && <QuizScreen />}
       </main>

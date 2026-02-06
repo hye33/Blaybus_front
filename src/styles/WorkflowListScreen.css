@@ -13,14 +13,19 @@
     
     border: 1px solid var(--green-main);
     border-radius: 10px;
-    padding: 52px 73px;
+    padding: 3% 4%;
     box-shadow: 0 0 24px rgba(248,140,220,0.1);
+}
+
+.wfl__frame.is-blurred {
+    filter: blur(10px);
+    pointer-events: none;
 }
 
 .wfl__header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     margin-bottom: 42px;
 }
 
@@ -42,6 +47,10 @@
     border: 0;
     padding: 0;
     opacity: 0.9;
+
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
 }
 
 .wfl__create:hover {
@@ -163,6 +172,8 @@
 }
 
 .wfl__sortBtn {
+    display: inline-flex;
+    align-items: center;
     padding: 0;
 }
 
@@ -171,12 +182,22 @@
 }
 
 .wfl__sortArrow {
-    margin-left: 8px;
-    transition: transform 0.2s ease;
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin-left: 2px;
+    transition: translateY(1px);
 }
 
-.wfl__sortArrow.open {
+/* 화살표 뒤집히게 */
+/* .wfl__sortArrow.is-open {
     transform: rotate(180deg);
+} */
+
+.wfl__sortLabel {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
 }
 
 .wfl__sortMenu {
@@ -230,8 +251,8 @@
     align-items: center;
     justify-content: center;
 
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(2px);
+    /* background: rgba(0, 0, 0, 0.35); */
+    /* backdrop-filter: blur(2px); */
 }
 
 .wfl__modal {
@@ -307,11 +328,11 @@
 
 .wfl__input {
     width: 100%;
-    height: 56px;
+    height: 2.2rem;
     border-radius: 10px;
     background: rgba(242,186,228,0.05);
     border: 1px solid rgba(255,255,255,0.35);
-    padding: 0 18px;
+    padding: 0 12px;
     box-sizing: border-box;
 
     font-family: var(--font-main);
