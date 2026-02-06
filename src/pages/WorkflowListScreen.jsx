@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from 'react'
 import html2canvas from 'html2canvas'
 import '../styles/WorkflowListScreen.css'
+import { update } from 'three/examples/jsm/libs/tween.module.js'
 
 const LIST_KEY = 'workflows:index'
 
@@ -22,6 +23,8 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
   const [items, setItems] = useState(() => loadIndex())
   const [activeMenuId, setActiveMenuId] = useState(null);
 //   const menuRef = useRef(null);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [createName, setCreateName] = useState('워크플로우 명');
   const [renameTarget, setRenameTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [renameValue, setRenameValue] = useState('');
@@ -39,18 +42,33 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
 
   // 새 워크플로우 만들기
   const onCreate = () => {
+    setActiveMenuId(null)
+    setSortOpen(false)
+
+    setCreateName('워크플로우 명')
+    setCreateOpen(true)
+  }
+
+  const confirmCreate = () => {
+    const name = createName.trim()
+    if (!name) return
+
     const id = `wf-${Date.now()}`
+    const now = new Date().toISOString()
+
     const next = [
       {
         id,
-        name: `워크플로우 명`,
-        // thumbnailDataUrl: '' // 나중에 캡처 붙일 자리
-        updatedAt: new Date().toISOString(),
-      },
-      ...items,
+        name,
+        updatedAt: now,
+        lastOpenedAt: now,
+        //thumbnailDataUrl: '' // 나중에 캡처 붙일 자리
+        },
+        ...items,
     ]
     setItems(next)
     saveIndex(next)
+    setCreateOpen(false)
     onOpenWorkflow(id)
   }
 
@@ -258,8 +276,9 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
                                     <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        onRename(wf.id);
-                                        setActiveMenuId(null)
+                                        // onRename(wf.id);
+                                        // setActiveMenuId(null)
+                                        openRenameModal(wf);
                                     }}
                                     >이름 수정
                                     </button>
@@ -287,6 +306,152 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
                 )}
             </div>
         </div>
+        {/* 이름 수정 모달 */}
+    {renameTarget && (
+    <div
+        className="wfl__modalOverlay"
+        onMouseDown={() => setRenameTarget(null)}
+    >
+        <div
+        className="wfl__modal"
+        onMouseDown={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        >
+        <div className="wfl__modalHeader">
+            <div className="wfl__modalTitle">워크플로우 명 수정</div>
+            <button
+            type="button"
+            className="wfl__modalClose"
+            onClick={() => setRenameTarget(null)}
+            aria-label="닫기"
+            >
+            ×
+            </button>
+        </div>
+
+        <div className="wfl__modalBody">
+            <div className="wfl__fieldLabel">새 워크플로우 명</div>
+            <input
+            className="wfl__input"
+            value={renameValue}
+            onChange={(e) => setRenameValue(e.target.value)}
+            autoFocus
+            />
+        </div>
+
+        <div className="wfl__modalFooter">
+            <button
+            type="button"
+            className="wfl__btn wfl__btnPrimary"
+            onClick={confirmRename}
+            >
+            확인
+            </button>
+        </div>
+        </div>
+    </div>
+    )}
+
+    {/* 삭제 경고 모달 */}
+    {deleteTarget && (
+    <div
+        className="wfl__modalOverlay"
+        onMouseDown={() => setDeleteTarget(null)}
+    >
+        <div
+        className="wfl__modal"
+        onMouseDown={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        >
+        <div className="wfl__modalHeader">
+            <div className="wfl__modalTitle wfl__modalTitleWarn">
+            <span className="wfl__warnIcon">!</span>
+            경고
+            </div>
+            {/* <button
+            type="button"
+            className="wfl__modalClose"
+            onClick={() => setDeleteTarget(null)}
+            aria-label="닫기"
+            >
+            ×
+            </button> */}
+        </div>
+
+        <div className="wfl__modalBody wfl__modalBodyCenter">
+            <div className="wfl__confirmText">
+            ‘{deleteTarget.name}’ 을 정말로 삭제하시겠습니까?
+            </div>
+        </div>
+
+        <div className="wfl__modalFooter wfl__modalFooterSplit">
+            <button
+            type="button"
+            className="wfl__btn wfl__btnDanger"
+            onClick={confirmDelete}
+            >
+            삭제
+            </button>
+            <button
+            type="button"
+            className="wfl__btn wfl__btnGhost"
+            onClick={() => setDeleteTarget(null)}
+            >
+            취소
+            </button>
+        </div>
+        </div>
+    </div>
+    )}
+
+    {/* 새 워크플로우 생성 모달 */}
+    {createOpen && (
+    <div
+        className="wfl__modalOverlay"
+        onMouseDown={() => setCreateOpen(false)}
+    >
+        <div
+        className="wfl__modal"
+        onMouseDown={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        >
+        <div className="wfl__modalHeader">
+            <div className="wfl__modalTitle">새 워크플로우 생성</div>
+            <button
+            type="button"
+            className="wfl__modalClose"
+            onClick={() => setCreateOpen(false)}
+            aria-label="닫기"
+            >
+            ×
+            </button>
+        </div>
+
+        <div className="wfl__modalBody">
+            <div className="wfl__fieldLabel">워크플로우 명</div>
+            <input
+            className="wfl__input"
+            value={createName}
+            onChange={(e) => setCreateName(e.target.value)}
+            autoFocus
+            />
+        </div>
+
+        <div className="wfl__modalFooter">
+            <button
+            type="button"
+            className="wfl__btn wfl__btnPrimary"
+            onClick={confirmCreate}
+            >
+            확인
+            </button>
+        </div>
+        </div>
+    </div>
+    )}
     </section>
   )
 }
