@@ -1,0 +1,253 @@
+.wfl {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+
+    display: flex;
+}
+
+.wfl__frame {
+    width: 100%;
+    flex: 1;
+    box-sizing: border-box;
+    
+    border: 1px solid var(--green-main);
+    border-radius: 10px;
+    padding: 52px 73px;
+    box-shadow: 0 0 24px rgba(248,140,220,0.1);
+}
+
+.wfl__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 42px;
+}
+
+.wfl__title {
+  margin: 0;
+  font-family: var(--font-main);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--green-main);
+}
+
+.wfl__create {
+  font-family: var(--font-main);
+  font-size: 20px;
+  font-weight: 400;
+
+  color: var(--green-main);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  opacity: 0.9;
+}
+
+.wfl__create:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.wfl__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 44px;
+}
+
+.wfl__card {
+  text-align: left;
+  background: transparent;
+  border: transparent;
+  border-radius: 16px;
+  color: var(--text);
+}
+
+.wfl__thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 5px;
+  overflow: hidden;
+  background: rgba(217,217,217,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wfl__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.wfl__thumbPlaceholder {
+  font-family: var(--font-main);
+  opacity: 0.6;
+}
+
+.wfl__meta {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.wfl__name {
+  font-family: var(--font-main);
+  color: var(--green-main);
+  font-size: 24px;
+  font-weight: 400;
+}
+
+/* .wfl__date {
+  font-family: var(--font-main);
+  font-size: 12px;
+  opacity: 0.7;
+} */
+
+.wfl__menuWrap {
+    position: relative;
+}
+
+.wfl__menuBtn {
+    background: transparent;
+    border: 0;
+    color: var(--green-main);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* .wfl__menuBtn:hover {
+    opacity: 1;
+} */
+
+.wfl__menu {
+    position: absolute;
+    top: 24px;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    background: rgba(64, 64, 66, 0.8);
+    border: transparent;
+    border-radius: 5px;
+    padding: 10px 5px;
+
+    min-width: 100px;
+    z-index: 10;
+}
+
+.wfl__menu button {
+    background: transparent;
+    border: 0;
+    color: var(--text);
+    text-align: left;
+    font-family: var(--font-main);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.wfl__menu button.danger {
+    color: #FF4C4C;
+}
+
+.wfl__sort {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.wfl__sortBtn {
+    /* display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    
+    background: transparent;
+    border: 0; */
+    padding: 0;
+
+    /* font-family: var(--font-main);
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--green-main);
+    cursor: pointer;
+    opacity: 0.9; */
+}
+
+.wfl__sortBtn:hover {
+    opacity: 1;
+}
+
+.wfl__sortArrow {
+    /* font-size: 20px;
+    line-height: 1;
+    transform: translateY(1px); */
+    margin-left: 8px;
+    transition: transform 0.2s ease;
+}
+
+.wfl__sortArrow.open {
+    transform: rotate(180deg);
+}
+
+.wfl__sortMenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    /* right: 0; */
+
+    margin-top: 0.6rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    background: rgba(64, 64, 66, 0.8);
+    border-radius: 8px;
+    padding: 10px 8%;
+
+    min-width: 120px;
+    z-index: 20;
+}
+
+.wfl__sortItem {
+    background: transparent;
+    border: 0;
+    color: var(--text);
+    text-align: left;
+    font-family: var(--font-main);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+    opacity: 0.9;
+}
+
+.wfl__sortItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 1;
+}
+
+.wfl__sortItem.is-active {
+    color: var(--green-main);
+}
+
+/* 반응형 */
+/* 4열 -> 3열 */
+@media (max-width: 1400px) {
+    .wfl__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }    
+}
+
+/* 3열 -> 2열 */
+@media (max-width: 1000px) {
+    .wfl__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
