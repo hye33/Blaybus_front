@@ -1,7 +1,7 @@
 import React from 'react'
 import ModelViewer from '../components/ModelViewer'
 
-export default function StudyScreen() {
+export default function StudyScreen({selectedModel}) {
     return (
         <div style={{ 
             display: 'flex', 
@@ -11,7 +11,7 @@ export default function StudyScreen() {
             height: '100%',
         }}>
             <div style={{ width: '70%', height: '100%' }}>
-                <ModelViewer />
+                <ModelViewer selectedModel={selectedModel} />
             </div>
             <div>
                 <div style={{ height: '40%' }}>

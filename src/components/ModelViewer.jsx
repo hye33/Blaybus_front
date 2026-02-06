@@ -1,21 +1,21 @@
 import { Canvas } from '@react-three/fiber'
-import React, { useState } from 'react'
-import { OrbitControls } from '@react-three/drei'
+import React, { Suspense, useState } from 'react'
+import { TransformControls, OrbitControls } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
-import { BASE } from './models/suspension/BASE'
-import { SPRING } from './models/suspension/SPRING'
-import { NUT } from './models/suspension/NUT'
-import { ROD } from './models/suspension/ROD'
 import { useRef } from 'react'
 import './ModelViewer.css'
+import resetIcon from '../assets/icons/resetButton.png';
+import { Suspension } from './models/Suspension'
+import { V4_Engine } from './models/V4_Engine'
 
-export default function ModelViewer() {
+
+export default function ModelViewer({ selectedModel }) {
     const [d, setD] = useState(0)
     const [x, setX] = useState(0)
     const [y, setY] = useState(0)
     const [z, setZ] = useState(0)
     const [selected, setSelected] = useState(null)
-    const radian = Math.PI / 180
+    const transformRef = useRef()
 
     const controlsRef = useRef()
 
@@ -39,7 +39,7 @@ export default function ModelViewer() {
                 className='reset-button'
                 onClick={() => controlsRef.current?.reset()}
             >
-                Reset Camera
+                <img src={resetIcon} alt="icon" />
             </button>
 
             <button
@@ -63,8 +63,23 @@ export default function ModelViewer() {
                 모델명
             </button>
 
+            <div className='conversion-container'>
+                <button
+                    className='conversion-button single-part-button'
+                    onClick={() => controlsRef.current?.reset()}
+                >
+                    단일부품
+                </button>
+                <button
+                    className='conversion-button assembly-part-button'
+                    onClick={() => controlsRef.current?.reset()}
+                >
+                    조립도
+                </button>
+            </div>
+
             {/* x y z 조절용 슬라이더 */}
-            <div style={{ position: 'absolute', top: 40, left: 10, zIndex: 1, color: 'white' }}>
+            <div style={{ position: 'absolute', top: 120, left: 10, zIndex: 1, color: 'white' }}>
                 <br />
                 <input
                     type="range"
@@ -118,22 +133,33 @@ export default function ModelViewer() {
                 Selected: {selected ?? 'None'}
             </div>
 
+            {selectedModel ?? 'No Selected Model'}
+
             <Canvas camera={{ position: [0, 1, 2] }}>
                 <OrbitControls ref={controlsRef} target={[0, 0, 0]} maxDistance={5} />
                 {/* <color attach="background" args={['#141414']} /> */}
                 <axesHelper args={[200, 200, 200]} />
-
                 <Environment preset="apartment" />
 
                 <ambientLight intensity={1} />
 
-                {/* <group rotation={[radian * x, radian * y, radian * z]}> */}
-                <group rotation={[radian * -63, radian * -45, radian * -57]}>
-                    <BASE position={[0, -0.51 - d * 1.5, 0]} setSelected={setSelected} />
-                    <SPRING position={[0, -0.5 - d * 0.5, 0]} setSelected={setSelected} />
-                    <NUT position={[0, 0.5 + - d * 0.2, 0]} setSelected={setSelected} />
-                    <ROD position={[0, 0.5 + d * 0.7, 0]} setSelected={setSelected} />
-                </group>
+                {selected && (
+                    <TransformControls
+                        ref={transformRef}
+                        object={selected}
+                        mode="translate"
+                        onMouseUp={() => {
+                            console.log('pos', selected.position)
+                            console.log('rot', selected.rotation)
+                        }}
+                    />
+                )}
+                {/* <Suspense fallback={null}> */}
+                    {selectedModel === 'suspension' && <Suspension d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel === 'V4-engine' && <V4_Engine d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                {/* </Suspense> */}
+                {/* </Suspense> */}
+
             </Canvas>
         </div>
     )
