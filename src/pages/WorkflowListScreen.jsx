@@ -39,7 +39,7 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
   const [sortKey, setSortKey] = useState('updated_desc')
   const [sortOpen, setSortOpen] = useState(false)
   const sortRef = useRef(null)
-  const [notice, setNotice] = useState(null)
+//   const [notice, setNotice] = useState(null)
 
   // 새 워크플로우 만들기
   const onCreate = () => {
