@@ -8,7 +8,6 @@ export default function SingleViewer({ selectedModel, mode, setMode }) {
     const [selectedPart, setSelectedPart] = useState(null)
     return (
         <div className='viewer'>
-            <div>{selectedPart}</div>
             <div className='conversion-container'>
                 <button
                     className={`conversion-button single-part-button ${mode === 'single' ? 'active' : ''}`}

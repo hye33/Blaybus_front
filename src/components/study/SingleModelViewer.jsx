@@ -14,7 +14,10 @@ export default function SingleModelViewer({ selectedPart, setIsSelected }) {
 
     const controlsRef = useRef()
     return (
-        <div>
+        <div style={{
+            width: '100%',
+            height: '100%'
+        }}>
             <div>
                 <button
                     className='reset-button'
@@ -25,7 +28,7 @@ export default function SingleModelViewer({ selectedPart, setIsSelected }) {
 
                 <button
                     className='back-button'
-                    style={{ color: '#78E875'}}
+                    style={{ color: '#78E875' }}
                     onClick={() => setIsSelected(false)}
                 >
                     뒤로가기
