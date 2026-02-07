@@ -1,5 +1,5 @@
 import React from 'react'
-import ModelSelectComponent from '../components/ModelSelectComponent'
+import ModelSelectComponent from '../components/study/ModelSelectComponent'
 
 export const modelList = [
     {
@@ -37,11 +37,16 @@ export default function HomeScreen({ setSelectedModel, setTab }) {
         <div style={{
             width: '100%',
             height: '100%',
+            boxSizing: 'border-box',
 
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
             gap: 10,
-            padding: 10,
+            padding: 20,
+
+            border: '1px solid var(--green-main)',
+            boxShadow: 'var(--green-box-shadow)',
+            borderRadius: 10,
         }}>
             {modelList.map((model) => (
                 <ModelSelectComponent

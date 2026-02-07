@@ -15,8 +15,8 @@ body,
   /* padding-left: 240px;
   padding-right: 240px;
   box-sizing: border-box; */
-  width: 75%;
-  height: 83%;
+  width: 75vw;
+  height: 83vh;
   display: flex;
   justify-content: center;
   align-items: center;
