@@ -16,7 +16,7 @@ button {
 .range-container {
     position: absolute;
     bottom: 20px;
-    right: 40px;
+    right: 20px;
     width: 404px;
     height: 44px;
     color: #78E875;
@@ -74,6 +74,20 @@ button {
     justify-content: center;
 }
 
+.back-button {
+    position: absolute;
+    top: 30px;
+    left: 90px;
+    width: 76px;
+    height: 26px;
+    background: none;
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .zoom-button {
     position: absolute;
     left: 40px;
@@ -108,7 +122,7 @@ button {
     height: 51px;
     border-radius: 30px;
     border: 1px solid #f88cdc;
-    color: #f88cdc;
+    color: #f88cdc5f;
     font-size: 22px;
     background-color: #f88cdc0d;
     z-index: 10;
@@ -119,12 +133,16 @@ button {
     line-height: 51px;
 }
 
+.description-button:hover {
+    color: #f88cdc;
+}
+
 .conversion-container {
     position: absolute;
     top: 30px;
     left: 50%;
     transform: translateX(-50%);
-    width: 332px;
+    width: 320px;
     height: 54px;
     border-radius: 50px;
 
@@ -145,12 +163,32 @@ button {
     line-height: 42px;
     width: 146px;
     height: 42px;
+    opacity: 0.5;
+    border-radius: 30px;
 }
 
 .single-part-button {
     color: #78E875;
 }
 
-.assembly-part-button {
+.single-part-button.active {
+    opacity: 1;
+    background: linear-gradient(90deg,
+                #78E87533,
+                #F88CDC0d);;
+}
+
+.single-part-button:hover, .assemble-part-button:hover {
+    opacity: 1;
+}
+
+.assemble-part-button {
     color: #f88cdc;
+}
+
+.assemble-part-button.active {
+    opacity: 1;
+    background: linear-gradient(90deg,
+                #78E8750d,
+                #F88CDC33);;
 }

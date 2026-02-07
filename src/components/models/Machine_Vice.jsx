@@ -1,6 +1,6 @@
 import { useGLTF } from '@react-three/drei'
 
-export function Machine_Vice({ d = 0, x = 0, y = 0, z = 0, setSelected, ...props }) {
+export function MachineVice({ d = 0, x = 0, y = 0, z = 0, setSelected, ...props }) {
   const assemble = useGLTF('/models/Machine_Vice.glb')
   const explode = useGLTF('/models/Machine_Vice_ex.glb')
   const partNames = assemble?.nodes && explode?.nodes
@@ -16,8 +16,8 @@ export function Machine_Vice({ d = 0, x = 0, y = 0, z = 0, setSelected, ...props
   const radian = Math.PI / 180
   return (
     <group
-      position={[-0.4, 0, -0.4]}
-      rotation={[radian * 0, radian * 0, radian * 0]}
+      position={[-0.6, 0, -0.4]}
+      rotation={[radian * 0, radian * 30, radian * 0]}
       scale={0.5}
     >
       {partNames.map(name => {

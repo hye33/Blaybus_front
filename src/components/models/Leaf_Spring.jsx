@@ -1,6 +1,6 @@
 import { useGLTF } from '@react-three/drei'
 
-export function Leaf_Spring({ d = 0, x = 0, y = 0, z = 0, setSelected, ...props }) {
+export function LeafSpring({ d = 0, x = 0, y = 0, z = 0, setSelected, ...props }) {
   const assemble = useGLTF('/models/Leaf_Spring.glb')
   const explode = useGLTF('/models/Leaf_Spring_ex.glb')
   const partNames = assemble?.nodes && explode?.nodes
@@ -17,7 +17,7 @@ export function Leaf_Spring({ d = 0, x = 0, y = 0, z = 0, setSelected, ...props 
   return (
     <group
       position={[-0.2, 0, -0.2]}
-      rotation={[radian * 0, radian * -90, radian * 0]}
+      rotation={[radian * 0, radian * -60, radian * 0]}
       scale={0.2}
       >
       {partNames.map(name => {
