@@ -4,21 +4,27 @@ export default function ModelSelectComponent({ label, onClick }) {
     return (
         <div onClick={onClick}
             style={{
-                width: '285px',
-                height: '225px',
+                width: '100%',
+                height: '100%',
                 cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
             }}>
             <div style={{
-                width: '285px',
-                height: '176px',
-                backgroundColor: '#3e3e40'
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#3e3e40',
+                borderRadius: '5px',
             }}>
                 <img src="" alt="Model Thumbnail" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div style={{
-                width: '285px',
-                fontSize: '26px',
+                width: '100%',
+                fontSize: '24px',
                 color: 'var(--green-main)',
+                marginTop: '15px',
+                fontFamily: 'var(--font-main)',
             }}>
                 {label}
             </div>

@@ -41,8 +41,9 @@ export default function HomeScreen({ setSelectedModel, setTab }) {
 
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: 10,
-            padding: 20,
+            gridTemplateRows: 'repeat(2, 2fr) 1fr',
+            gap: '50px 50px',
+            padding: 70,
 
             border: '1px solid var(--green-main)',
             boxShadow: 'var(--green-box-shadow)',
