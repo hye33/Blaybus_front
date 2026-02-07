@@ -15,7 +15,13 @@ export default function ModelSelectComponent({ label, onClick }) {
             }}>
                 <img src="" alt="Model Thumbnail" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
-            <span>{label}</span>
+            <div style={{
+                width: '285px',
+                fontSize: '26px',
+                color: 'var(--green-main)',
+            }}>
+                {label}
+            </div>
         </div >
     )
 }
