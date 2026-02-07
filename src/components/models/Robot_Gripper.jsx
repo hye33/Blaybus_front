@@ -1,6 +1,6 @@
 import { useGLTF } from '@react-three/drei'
 
-export function Robot_Gripper({ d = 0, x = 0, y = 0, z = 0, setSelected, ...props }) {
+export function RobotGripper({ d = 0, x = 0, y = 0, z = 0, setSelected, ...props }) {
   const assemble = useGLTF('/models/Robot_Gripper.glb')
   const explode = useGLTF('/models/Robot_Gripper_ex.glb')
   const partNames = assemble?.nodes && explode?.nodes

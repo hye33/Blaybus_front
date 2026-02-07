@@ -1,6 +1,6 @@
 import { useGLTF } from '@react-three/drei'
 
-export function V4_Engine({ d = 0, x = 0, y = 0, z = 0, setSelected, ...props }) {
+export function V4Engine({ d = 0, x = 0, y = 0, z = 0, setSelected, ...props }) {
     const assemble = useGLTF('/models/V4_Engine.glb')
     const explode = useGLTF('/models/V4_Engine_ex.glb')
     const partNames = assemble?.nodes && explode?.nodes
