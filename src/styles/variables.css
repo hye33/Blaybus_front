@@ -13,4 +13,6 @@
 
     --font-title: 'Orbitron', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-main: 'Pretendard', 'Noto Sans KR', -apple-system;
+
+    --green-box-shadow: 0 0px 12px rgba(120, 232, 117, 0.5);
 }
