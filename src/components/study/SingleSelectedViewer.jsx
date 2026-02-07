@@ -1,5 +1,5 @@
 import React from 'react'
-import ModelSelectComponent from '../components/study/ModelSelectComponent'
+import PartSelectComponent from './PartSelectComponent';
 
 export const modelList = [
     {
@@ -32,7 +32,7 @@ export const modelList = [
     },
 ]
 
-export default function HomeScreen({ setSelectedModel, setTab }) {
+export default function SingleSelectedViewer({ setSelectedPart, setIsSelected }) {
     return (
         <div style={{
             width: '100%',
@@ -40,20 +40,17 @@ export default function HomeScreen({ setSelectedModel, setTab }) {
             boxSizing: 'border-box',
 
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gridTemplateRows: 'repeat(2, 2fr) 1fr',
-            gap: '50px 50px',
-            padding: 70,
-
-            border: '1px solid var(--green-main)',
-            boxShadow: 'var(--green-box-shadow)',
-            borderRadius: 10,
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateRows: 'repeat(3, 1fr)',
+            gap: '35px 50px',
+            padding: 60,
+            paddingTop: 110,
         }}>
             {modelList.map((model) => (
-                <ModelSelectComponent
+                <PartSelectComponent
                     key={model.id}
                     label={model.label}
-                    onClick={() => {setSelectedModel(model.id); setTab(1)}}
+                    onClick={() => {setSelectedPart(model.id); setIsSelected(true);}}
                 />
             ))}
         </div>

@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import './ModelViewer.css'
 import SingleModelViewer from './SingleModelViewer';
+import SingleSelectedViewer from './SingleSelectedViewer';
 
 export default function SingleViewer({ selectedModel, mode, setMode }) {
-    const [selected, setSelected] = useState(null)
-    const [isSelected, setIsSelected] = useState(true)
+    const [isSelected, setIsSelected] = useState(false)
+    const [selectedPart, setSelectedPart] = useState(null)
     return (
         <div className='viewer'>
+            <div>{selectedPart}</div>
             <div className='conversion-container'>
                 <button
                     className={`conversion-button single-part-button ${mode === 'single' ? 'active' : ''}`}
@@ -20,8 +22,8 @@ export default function SingleViewer({ selectedModel, mode, setMode }) {
                     조립도
                 </button>
             </div>
-            {isSelected && <SingleModelViewer selectedModel={selectedModel} setIsSelected={setIsSelected}/>}
-
+            {isSelected && <SingleModelViewer selectedPart={selectedPart} setIsSelected={setIsSelected}/>}
+            {!isSelected && <SingleSelectedViewer setSelectedPart={setSelectedPart} setIsSelected={setIsSelected}/>}
         </div >
     )
 }

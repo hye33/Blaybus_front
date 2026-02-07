@@ -12,6 +12,7 @@ import { MachineVice } from '../models/Machine_Vice'
 import { Drone } from '../models/Drone'
 import { RobotGripper } from '../models/Robot_Gripper'
 import { RobotArm } from '../models/Robot_Arm'
+import ModelDescriptionPopup from './ModelDescriptionPopup'
 
 export default function ModelViewer({ selectedModel, mode, setMode }) {
     const [d, setD] = useState(0)
@@ -19,6 +20,7 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
     const [y, setY] = useState(0)
     const [z, setZ] = useState(0)
     const [selected, setSelected] = useState(null)
+    const [popupOpen, setPopupOpen] = useState(false);
     const transformRef = useRef()
 
     const controlsRef = useRef()
@@ -35,7 +37,7 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
                     value={d}
                     onChange={(e) => setD(parseFloat(e.target.value))}
                     className="range-slider"
-                    style={{ width: 308, height: 4 }}
+                    style={{ width: 308, height: 4, marginLeft: 15 }}
                 />
             </div>
 
@@ -62,10 +64,10 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
                 </button>
 
                 <button
-                    className='description-button'
-                    onClick={() => controlsRef.current?.reset()}
+                    className={`description-button ${popupOpen ? 'active' : ''}`}
+                    onClick={() => setPopupOpen(!popupOpen)}
                 >
-                    모델명
+                    {selectedModel}
                 </button>
             </div>
 
@@ -137,6 +139,8 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
             >
                 Selected: {selected ?? 'None'}
             </div>
+
+            {popupOpen && <ModelDescriptionPopup selectedModel={selectedModel} setPopupOpen={setPopupOpen} />}
 
             <div style={{width: '100%', height: '100%'}}>
                 <Canvas camera={{ position: [0, 1, 2] }}>

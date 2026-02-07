@@ -5,15 +5,16 @@ import './ModelViewer.css'
 import resetIcon from '../../assets/icons/resetButton.png';
 import { Canvas } from '@react-three/fiber'
 import { useRef } from 'react'
+import SingleDescriptionPopup from './SingleDescriptionPopup';
 
-export default function SingleModelViewer({ selectedModel, setIsSelected }) {
-
+export default function SingleModelViewer({ selectedPart, setIsSelected }) {
+    const [popupOpen, setPopupOpen] = useState(false);
     const [selected, setSelected] = useState(null)
     const transformRef = useRef()
 
     const controlsRef = useRef()
     return (
-        <div className='viewer'>
+        <div>
             <div>
                 <button
                     className='reset-button'
@@ -46,11 +47,13 @@ export default function SingleModelViewer({ selectedModel, setIsSelected }) {
 
                 <button
                     className='description-button'
-                    onClick={() => controlsRef.current?.reset()}
+                    onClick={() => setPopupOpen(!popupOpen)}
                 >
                     부품명
                 </button>
             </div>
+
+            {popupOpen && <SingleDescriptionPopup selectedPart={selectedPart} setPopupOpen={setPopupOpen} />}
 
             <Canvas camera={{ position: [2, 1, 2] }}>
                 <OrbitControls ref={controlsRef} target={[0, 0, 0]} maxDistance={5} />

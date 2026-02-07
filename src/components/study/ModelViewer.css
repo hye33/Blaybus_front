@@ -1,6 +1,7 @@
 button {
     border: none;
     outline: none;
+    cursor: pointer;
 }
 
 .viewer {
@@ -9,7 +10,7 @@ button {
     background-color: #18181A;
     border: 1px solid #78E875;
     border-radius: 10px;
-    box-shadow: 0 0px 12px rgba(120, 232, 117, 0.5);
+    box-shadow: var(--green-box-shadow);
     position: relative;
 }
 
@@ -36,27 +37,36 @@ button {
     background: transparent;
 }
 
+.range-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+}
+
 /* Chrome / Edge / Safari */
 .range-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 16px;
     height: 16px;
-    background: #f88cdc;
+    background: #78E875;
     border-radius: 50%;
     cursor: pointer;
+    margin-top: -6px;
+}
+
+.range-slider::-webkit-slider-runnable-track {
+    height: 4px;
+    background: linear-gradient(90deg, #78E875, #f88cdc);
+    border-radius: 2px;
 }
 
 /* Firefox */
 .range-slider::-moz-range-thumb {
     width: 16px;
     height: 16px;
-    background: #f88cdc;
+    background: #78E875;
     border-radius: 50%;
     cursor: pointer;
-}
-
-.range-slider {
-    width: 200px;
 }
 
 .reset-button {
@@ -76,12 +86,15 @@ button {
 
 .back-button {
     position: absolute;
-    top: 30px;
-    left: 90px;
-    width: 76px;
-    height: 26px;
+    top: 35px;
+    left: 95px;
+    width: 90px;
+    height: 35px;
     background: none;
     z-index: 10;
+
+    font-size: 22px;
+    font-family: var(--font-main);
 
     display: flex;
     align-items: center;
@@ -90,7 +103,7 @@ button {
 
 .zoom-button {
     position: absolute;
-    left: 40px;
+    left: 30px;
     width: 37px;
     height: 37px;
     background-color: #2f242d;
@@ -133,6 +146,10 @@ button {
     line-height: 51px;
 }
 
+.description-button.active {
+    color: #f88cdc;
+}
+
 .description-button:hover {
     color: #f88cdc;
 }
@@ -143,13 +160,14 @@ button {
     left: 50%;
     transform: translateX(-50%);
     width: 320px;
-    height: 54px;
+    height: 44px;
     border-radius: 50px;
 
     border: 1px solid transparent;
     background:
         linear-gradient(#18181A, #18181A) padding-box,
         linear-gradient(90deg, #78E875, #f88cdc) border-box;
+    box-shadow: var(--green-to-pink-gradient);
 
     display: flex;
     align-items: center;
@@ -160,9 +178,9 @@ button {
 .conversion-button {
     background-color: transparent;
     font-size: 24px;
-    line-height: 42px;
-    width: 146px;
-    height: 42px;
+    line-height: 44px;
+    width: 160px;
+    height: 44px;
     opacity: 0.5;
     border-radius: 30px;
 }
@@ -174,11 +192,13 @@ button {
 .single-part-button.active {
     opacity: 1;
     background: linear-gradient(90deg,
-                #78E87533,
-                #F88CDC0d);;
+            #78E87533,
+            #F88CDC0d);
+    ;
 }
 
-.single-part-button:hover, .assemble-part-button:hover {
+.single-part-button:hover,
+.assemble-part-button:hover {
     opacity: 1;
 }
 
@@ -189,6 +209,7 @@ button {
 .assemble-part-button.active {
     opacity: 1;
     background: linear-gradient(90deg,
-                #78E8750d,
-                #F88CDC33);;
+            #78E8750d,
+            #F88CDC33);
+    ;
 }
