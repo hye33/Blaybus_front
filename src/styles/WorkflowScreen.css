@@ -21,6 +21,7 @@
 
 .wf__canvas {
   flex: 1;
+  position: relative;
   width: 100%;
   min-height: 0;
 }
@@ -117,10 +118,26 @@
 /* 상단 워크플로우 메뉴바 */
 .wfTop {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 2%;
   margin-bottom: 2%;
+  flex-shrink: 0;
+}
+
+.wfTop__left {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.wfTop__title {
+  font-family: var(--font-main);
+  color: var(--green-main);
+  font-size: 32px;
+  line-height: 1;
+  padding-top: 4px;
 }
 
 .wfTop__back {
@@ -181,9 +198,15 @@
   border-radius: 8px;
   padding: 10px 8px;
 
-  min-width: 160px;
+  min-width: 180px;
   z-index: 30;
 }
+
+/* .wfTop__divider {
+  height: 1;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 6px 0;
+} */
 
 .wfTop__item {
   background: transparent;
@@ -197,9 +220,9 @@
   border-radius: 6px;
 }
 
-.wfTop__item:hover {
+/* .wfTop__item:hover {
   background: rgba(255,255,255,0.08);
-}
+} */
 
 .wfTop__item.is-active {
   color: var(--green-main);
@@ -223,10 +246,18 @@
   line-height: 1;
 }
 
+.wfTop__addNode:hover {
+  opacity: 0.9;
+}
+
 /* 노드 안 아이콘 이미지 */
 .wfNode__iconImg {
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
+}
+
+.react-flow, .react-flow__pane {
+  background: transparent !important;
 }

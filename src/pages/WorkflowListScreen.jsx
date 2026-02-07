@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from 'react'
 import html2canvas from 'html2canvas'
 import '../styles/WorkflowListScreen.css'
-import { update } from 'three/examples/jsm/libs/tween.module.js'
+// import { update } from 'three/examples/jsm/libs/tween.module.js'
 import chevronDown from '../assets/chevron-down.png'
 
 const LIST_KEY = 'workflows:index'
@@ -179,7 +179,8 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
   return (
     <section className="wfl">
         <div className={`wfl__frame ${isModalOpen ? 'is-blurred' : ''}`}>
-            <header className="wfl__header">
+            <div className='wfl__content'>
+                <header className="wfl__header">
                 <div className='wfl__sort wfl__menuWrap' ref={sortRef}>
                     <button
                         className="wfl__menuBtn wfl__sortBtn"
@@ -294,7 +295,9 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
                 )}
             </div>
         </div>
-        {/* 이름 수정 모달 */}
+            </div>
+            
+    {/* 이름 수정 모달 */}
     {renameTarget && (
     <div
         className="wfl__modalOverlay"

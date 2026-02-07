@@ -28,7 +28,13 @@ function App() {
 
   return (
     <>
-      <Navbar tab={tab} setTab={setTab} />
+      <Navbar
+        tab={tab}
+        setTab={(next) => {
+          setTab(next)
+          if (next === 2) backToWorkflowList()
+        }}
+      />
       
       <main className="app-layout">
         {tab === 0 && <HomeScreen setSelectedModel={setSelectedModel} setTab={setTab} />}

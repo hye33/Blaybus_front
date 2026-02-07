@@ -6,13 +6,14 @@ import {
   addEdge,
   Handle,
   Position,
-  MiniMap,
+  // MiniMap,
   Controls,
-  Background,
+  // Background,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import '../styles/WorkflowScreen.css'
 import folderPlus from '../assets/folder-plus.png'
+import workflowIcon from '../assets/button_projSelect.png'
 
 const LIST_KEY = 'workflows:index'
 
@@ -171,27 +172,34 @@ useEffect(() => {
     <section className="wf">
       <div className="wf__frame">
         <div className='wfTop'>
+          <div className='wfTop__left' ref={wfMenuRef}>
             <button
             type='button'
                 className="wfTop__back"
-                onClick={() => onGoWorkflowList?.()}
+                onClick={() => setWfMenuOpen((v) => !v)}
                 aria-label='워크플로우'
             >
-                <span className='wfTop__backIcon' aria-hidden='true'>ㄴ</span>
+                <img src={workflowIcon} alt="워크플로우 리스트 아이콘" className='wfTop__backIcon' />
             </button>
 
-            <div className='wfTop__menuWrap' ref={wfMenuRef}>
-                <button
-                    type='button'
-                    className='wfTop__menuBtn'
-                    onClick={() => setWfMenuOpen((v) => !v)}
-                >
-                    <span className='wfTop__arrow' aria-hidden='true'></span>
-                    <span className='wfTop__label'>{currentWfName}</span>
-                </button>
+            <div className='wfTop__title' aria-hidden='true'>{currentWfName}</div>
 
-                {wfMenuOpen && (
+            {wfMenuOpen && (
+              // 리스트로 돌아가기 메뉴
                   <div className="wfTop__menu">
+                    <button
+                      type='button'
+                      className='wfTop__item'
+                      onClick={() => {
+                        // setWfMenuOpen(false)
+                        // onGoWorkflowList?.()
+                        setWfMenuOpen((v) => !v)
+                      }}
+                    >
+                    </button>
+
+                    <div className='wfTop__divider' />
+
                     {workflowList.map((wf) => (
                       <button
                         key={wf.id}
@@ -211,14 +219,14 @@ useEffect(() => {
 
             <button
                 type='button'
-                className='wfTop__addBtn'
-                onClick={() => addNewNode()}
+                className='wfTop__addNode'
+                onClick={addNewNode}
                 aria-label='노드 추가'
             >
                 +
             </button>
         </div>
-                
+
         <div className="wf__canvas">
           <ReactFlow
             nodes={nodes}
@@ -231,9 +239,9 @@ useEffect(() => {
             defaultEdgeOptions={defaultEdgeOptions}
             connectionLineStyle={connectionLineStyle}
           >
-            <MiniMap />
+            {/* <MiniMap /> */}
             <Controls />
-            <Background />
+            {/* <Background /> */}
           </ReactFlow>
         </div>
       </div>

@@ -7,6 +7,7 @@
 }
 
 .wfl__frame {
+    position: relative;
     width: 100%;
     flex: 1;
     box-sizing: border-box;
@@ -17,7 +18,8 @@
     box-shadow: 0 0 24px rgba(248,140,220,0.1);
 }
 
-.wfl__frame.is-blurred {
+.wfl__frame.is-blurred .wfl__content {
+    background-color: rgba(21, 21, 21, 0.7);
     filter: blur(10px);
     pointer-events: none;
 }
