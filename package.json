@@ -18,9 +18,12 @@
     "three": "^0.182.0",
     "web-vitals": "^2.1.4"
   },
+  "overrides": {
+    "camera-controls": "2.9.0"
+  },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
