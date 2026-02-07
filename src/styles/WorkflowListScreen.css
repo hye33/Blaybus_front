@@ -16,12 +16,48 @@
     border-radius: 10px;
     padding: 3% 4%;
     box-shadow: 0 0 24px rgba(248,140,220,0.1);
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+    min-height: 0;
 }
 
 .wfl__frame.is-blurred .wfl__content {
     background-color: rgba(21, 21, 21, 0.7);
     filter: blur(10px);
     pointer-events: none;
+}
+
+/* 스크롤바 */
+.wfl__content {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 14px;
+    scrollbar-gutter: stable;
+}
+
+.wfl__content::-webkit-scrollbar { width: 6px; }
+
+.wfl__content::-webkit-scrollbar-thumb {
+    background: var(--green-main);
+    border-radius: 6px;
+}
+
+.wfl__content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.wfl__header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+
+    /* back */
 }
 
 .wfl__header {
