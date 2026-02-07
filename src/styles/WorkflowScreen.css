@@ -12,7 +12,6 @@
 
   border: 1px solid var(--green-main);
   border-radius: 10px;
-  padding: 3% 4%;
   box-shadow: 0 0 24px rgba(248,140,220,0.1);
 
   display: flex;
@@ -38,9 +37,7 @@
 }
 
 /* 입력들이 드래그 방해 안 하게(reactflow class) */
-.nodrag {
-  cursor: text;
-}
+.nodrag { cursor: text; }
 
 .wfNode__title {
   width: 100%;
@@ -66,30 +63,26 @@
   font-size: 16px;
   text-align: center;
   line-height: 1.4;
-  /* opacity: 0.9; */
 }
 
 .wfNode__footer {
   margin-top: 10px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 10px;
 }
 
 .wfNode__iconBtn {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
   cursor: pointer;
 }
 
-.wfNode__fileInput {
-  display: none;
-}
+.wfNode__fileInput { display: none; }
 
 .wfNode__fileName {
   flex: 1;
@@ -121,15 +114,37 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 2%;
-  margin-bottom: 2%;
   flex-shrink: 0;
+  padding: 3% 3% 0;
+
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  isolation: isolate;
+}
+
+.wfTop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  background: transparent;
+  filter: blur(12px);
+  transform: scale(1.05);
+  /* -webkit-backdrop-filter: blur(12px); */
+
+  /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .wfTop__left {
   position: relative;
   display: inline-flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 20px;
 }
 
 .wfTop__title {
@@ -137,7 +152,6 @@
   color: var(--green-main);
   font-size: 32px;
   line-height: 1;
-  padding-top: 4px;
 }
 
 .wfTop__back {
@@ -224,17 +238,15 @@
   background: rgba(255,255,255,0.08);
 } */
 
-.wfTop__item.is-active {
-  color: var(--green-main);
-}
+.wfTop__item.is-active { color: var(--green-main); }
 
 .wfTop__addNode {
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
 
   background: transparent;
-  border: 2px dashed var(--green-main);
+  border: 3px dashed var(--green-main);
   color: var(--green-main);
 
   display: inline-flex;
@@ -242,13 +254,11 @@
   justify-content: center;
 
   cursor: pointer;
-  font-size: 22px;
-  line-height: 1;
+  font-size: 50px;
+  /* line-height: 1; */
 }
 
-.wfTop__addNode:hover {
-  opacity: 0.9;
-}
+.wfTop__addNode:hover { opacity: 0.9; }
 
 /* 노드 안 아이콘 이미지 */
 .wfNode__iconImg {
@@ -258,6 +268,31 @@
   display: block;
 }
 
-.react-flow, .react-flow__pane {
-  background: transparent !important;
+.react-flow__controls-button {
+  /* zoom button 스타일 재사용 */
+    position: absolute;
+    left: 40px;
+    width: 37px;
+    height: 37px;
+    background-color: #2f242d;
+    color: #f88cdc;
+    font-size: 25px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+.react-flow__controls-zoomin { bottom: 180px; }
+
+.react-flow__controls-zoomout { bottom: 130px; }
+
+.react-flow__controls-fitview { bottom: 80px; }
+
+.react-flow__controls-interactive { bottom: 30px; }
+
+.react-flow__attribution { background: transparent; }

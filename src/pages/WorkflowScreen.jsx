@@ -168,11 +168,24 @@ useEffect(() => {
     return () => saveTimer.current && clearTimeout(saveTimer.current)
   }, [nodes, edges, storageKey])
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!wfMenuOpen) return
+      
+      if (wfMenuRef.current && !wfMenuRef.current.contains(event.target)) {
+        setWfMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mouse', handleClickOutside)
+  }, [wfMenuOpen])
+
   return (
     <section className="wf">
       <div className="wf__frame">
         <div className='wfTop'>
-          <div className='wfTop__left' ref={wfMenuRef}>
+          <div className='wfTop__left wfTop__menuWrap' ref={wfMenuRef}>
             <button
             type='button'
                 className="wfTop__back"
@@ -187,16 +200,6 @@ useEffect(() => {
             {wfMenuOpen && (
               // 리스트로 돌아가기 메뉴
                   <div className="wfTop__menu">
-                    <button
-                      type='button'
-                      className='wfTop__item'
-                      onClick={() => {
-                        // setWfMenuOpen(false)
-                        // onGoWorkflowList?.()
-                        setWfMenuOpen((v) => !v)
-                      }}
-                    >
-                    </button>
 
                     <div className='wfTop__divider' />
 
@@ -220,7 +223,10 @@ useEffect(() => {
             <button
                 type='button'
                 className='wfTop__addNode'
-                onClick={addNewNode}
+                onClick={() => {
+                  setWfMenuOpen(false)
+                  addNewNode()
+                }}
                 aria-label='노드 추가'
             >
                 +
@@ -238,6 +244,7 @@ useEffect(() => {
             fitView
             defaultEdgeOptions={defaultEdgeOptions}
             connectionLineStyle={connectionLineStyle}
+            onPaneClick={() => setWfMenuOpen(false)}
           >
             {/* <MiniMap /> */}
             <Controls />
