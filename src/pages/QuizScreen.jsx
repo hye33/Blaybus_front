@@ -54,8 +54,6 @@ export default function QuizScreen({ userUuid }) {
         onOpenHistory={(clickedQuizSetId) => {
           setQuizSetId(clickedQuizSetId);
           setCurrentQuizList([]);
-          // history에서는 result로 안 가니까 attempt는 굳이 유지/초기화 어느 쪽도 상관 없는데
-          // 깔끔하게 초기화만 해두자
           resetAttempt();
           setQuizView('history');
         }}
@@ -105,8 +103,8 @@ export default function QuizScreen({ userUuid }) {
         quizSetId={quizSetId}
         attemptDetail={latestAttemptDetail}
         onClose={() => setQuizView('asset')}
-        onAiAnalyze={({ quizAttemptId }) => {
-          setQuizAttemptIdForAi(quizAttemptId ?? null)
+        onAiAnalyze={() => {
+          setQuizAttemptIdForAi(latestAttemptDetail?.quizAttemptId ?? null)
           setQuizView('ai')
         }}
       />

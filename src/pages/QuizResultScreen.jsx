@@ -17,7 +17,6 @@ export default function QuizResultScreen({
 
   const createdText = useMemo(() => {
     if (!attemptDetail?.createdAt) return ''
-    // createdAt이 ISO string이라면 보기 좋게
     try {
       return new Date(attemptDetail.createdAt).toLocaleString()
     } catch {
@@ -29,9 +28,9 @@ export default function QuizResultScreen({
     <section className="qr">
       <div className="qr__frame">
         <header className="qr__header">
-          <button className="qr__close" type="button" onClick={() => onClose?.()} aria-label="닫기">
-            ×
-          </button>
+          <button className="qr__close" type="button" onClick={onClose} aria-label="닫기">
+            <span className="qr__closeIcon" />
+        </button>
 
           <div className="qr__topRow">
             <div className="qr__titleBox">
@@ -82,7 +81,7 @@ export default function QuizResultScreen({
 
                         // 표시 우선순위: 내 선택(✓/×) + 정답(○)
                         let mark = ''
-                        if (isUser) mark = d.isCorrect ? '✓' : '×'
+                        if (isUser) mark = d.isCorrect ? '○' : '×'
                         else if (isAnswer) mark = '○'
 
                         return (
