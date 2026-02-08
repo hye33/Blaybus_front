@@ -1,7 +1,7 @@
 import React from 'react'
 import ModelViewer from '../components/study/ModelViewer'
 import MemoViewer from '../components/study/MemoViewer'
-import AIAssistantViewer from '../components/study/AlViewer'
+import AIAssistantViewer from '../components/study/AIAssistantViewer'
 import SingleViewer from '../components/study/SingleViewer'
 
 export default function StudyScreen({ selectedModel }) {
@@ -14,7 +14,7 @@ export default function StudyScreen({ selectedModel }) {
             width: '100%',
             height: '100%',
         }}>
-            <div style={{ width: '52.5vw', height: '100%' }}>
+            <div style={{ width: '52.5vw', height: '100%', minWidth: 0 }}>
                 {mode === 'assemble' && <ModelViewer selectedModel={selectedModel} mode={mode} setMode={setMode} />}
                 {mode === 'single' && <SingleViewer selectedModel={selectedModel} mode={mode} setMode={setMode} />}
             </div>
