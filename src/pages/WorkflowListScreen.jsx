@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef } from 'react'
-import html2canvas from 'html2canvas'
+// import html2canvas from 'html2canvas'
 import '../styles/WorkflowListScreen.css'
 // import { update } from 'three/examples/jsm/libs/tween.module.js'
 import chevronDown from '../assets/chevron-down.png'
@@ -228,7 +228,7 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
                 sortedItems.map((wf) => (
                     <button
                     key={wf.id}
-                    className="wfl__card"
+                    className="wfl__row"
                     onClick={() => {
                         const now = new Date().toISOString();
                         const next = items.map((item) =>
@@ -239,15 +239,16 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
                         onOpenWorkflow(wf.id)
                     }}
                     >
-                    <div className="wfl__thumb">
-                        {wf.thumbnailDataUrl ? (
+                    <div className="wfl__rowMain">
+                        <div className='wfl__name'>{wf.name}</div>
+                        {/* {wf.thumbnailDataUrl ? (
                         <img src={wf.thumbnailDataUrl} alt="" />
                         ) : (
                         <div className="wfl__thumbPlaceholder">No Preview</div>
-                        )}
+                        )} */}
                     </div>
-                    <div className="wfl__meta">
-                        <div className="wfl__name">{wf.name}</div>
+                    {/* <div className="wfl__meta">
+                        <div className="wfl__name">{wf.name}</div> */}
 
                         <div className="wfl__menuWrap">
                             <button
@@ -284,18 +285,17 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
                                 </div>
                             )}
                         </div>
-                        
                         {/* 현재 날짜 저장 */}
                         {/* <div className="wfl__date">
                             {new Date(wf.updatedAt).toLocaleDateString()}
                         </div> */}
-                    </div>
+                    {/* </div> */}
                     </button>
-                ))
+                    ))
                 )}
             </div>
         </div>
-            </div>
+    </div>
             
     {/* 이름 수정 모달 */}
     {renameTarget && (
