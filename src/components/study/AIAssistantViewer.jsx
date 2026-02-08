@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function MemoViewer() {
+export default function AIAssistantViewer() {
     return (
         <div className='study-side-view'>
-            Memo Viewer
+            AI Viewer
         </div >
     )
 }

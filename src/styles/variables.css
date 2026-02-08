@@ -21,5 +21,7 @@
     --pink-main-a50: #f88cdc80;
     --pink-main-a20: #f88cdc33;
 
+    --green-main-a10: #78e8750d;
+
     --green-to-pink-gradient: linear-gradient(90deg, #78E875, #f88cdc);
 }
