@@ -1,0 +1,172 @@
+.qz {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+}
+
+.qz__frame {
+  width: 100%;
+  flex: 1;
+  box-sizing: border-box;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 360px; /* 우측 패널 폭 */
+  gap: 28px;
+  align-items: start;
+}
+
+.qz__left {
+  position: relative;
+  min-height: 0;
+  height: calc(100vh - 140px);
+  border: 1px solid var(--green-main);
+  border-radius: 10px;
+  padding: 36px 36px 110px; /* 아래 버튼 자리 확보 */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.qz__title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--green-main);
+  margin-bottom: 18px;
+}
+
+.qz__desc {
+  max-width: 520px;
+  line-height: 1.55;
+  opacity: 0.85;
+  font-size: 14px;
+  white-space: pre-line;
+}
+
+.qz__bottomBtns {
+  position: absolute;
+  left: 36px;
+  right: 36px;
+  bottom: 28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.qz__btn {
+  height: 44px;
+  min-width: 220px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+}
+
+.qz__btnPrimary {
+  border-color: var(--green-main);
+  color: var(--green-main);
+}
+
+.qz__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.qz__right {
+  min-height: 0;
+  border: 1px solid rgba(248, 140, 220, 0.55);
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(248, 140, 220, 0.06);
+}
+
+.qz__rightHeader {
+  padding: 24px 22px;
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(248, 140, 220, 0.95);
+  text-align: center;
+  border-bottom: 1px solid rgba(248, 140, 220, 0.35);
+}
+
+.qz__rightList {
+  display: grid;
+}
+
+.qz__rightItem {
+  width: 100%;
+  text-align: left;
+  padding: 18px 18px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(248, 140, 220, 0.25);
+  cursor: pointer;
+  color: rgba(248, 140, 220, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.qz__rightItem:last-child {
+  border-bottom: 0;
+}
+
+.qz__rightItemTitle {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.qz__chev {
+  font-size: 22px;
+  opacity: 0.9;
+}
+
+.qz__rightEmpty {
+  padding: 18px;
+  opacity: 0.75;
+}
+
+.qz__accItem {
+  border-bottom: 1px solid rgba(248, 140, 220, 0.25);
+}
+.qz__accItem:last-child {
+  border-bottom: 0;
+}
+
+.qz__accBtn {
+  border-bottom: 0; /* wrapper에서 border 처리 */
+  align-items: flex-start;
+}
+
+.qz__accSub {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.75;
+  color: rgba(255,255,255,0.75);
+}
+
+.qz__accChev {
+  font-size: 22px;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.qz__accPanel {
+  padding: 14px 18px 18px;
+  background: rgba(0,0,0,0.18);
+  border-top: 1px solid rgba(248, 140, 220, 0.18);
+}
+
+.qz__accLabel {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+.qz__accText {
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-line;
+  opacity: 0.85;
+}

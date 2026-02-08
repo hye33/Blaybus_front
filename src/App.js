@@ -26,6 +26,14 @@ function App() {
     setActiveWorkflowId(null)
   }
 
+  // quiz
+  const [quizView, setQuizView] = useState('list')
+  const [selectedAssetId, setSelectedAssetId] = useState(null)
+  const [activeQuizSetId, setActiveQuizSetId] = useState(null)
+  const [quizResetKey, setQuizResetKey] = useState(0)
+
+  const userUuid = 'TEMP-USER-UUID'
+
   return (
     <>
       <Navbar
@@ -33,6 +41,7 @@ function App() {
         setTab={(next) => {
           setTab(next)
           if (next === 2) backToWorkflowList()
+          if (next === 3) setQuizResetKey((k) => k + 1)
         }}
       />
       
@@ -48,7 +57,36 @@ function App() {
               onOpenWorkflow={openWorkflow}
             />)
         )}
-        {tab === 3 && <QuizScreen />}
+        {tab === 3 && 
+        <QuizScreen
+          key={quizResetKey}
+          userUuid={userUuid}
+
+          // quizView={quizView}
+          // assetId={selectedAssetId}
+          // quizSetId={activeQuizSetId}
+
+          // onOpenQuizAsset={(assetId) => {
+          //   setSelectedAssetId(assetId)
+          //   setQuizView('quizAsset')
+          // }}
+
+          // onStartQuiz={(quizSetId) => {
+          //   setActiveQuizSetId(quizSetId)
+          //   setQuizView('play')
+          // }}
+
+          // onFinishQuiz={(quizSetId) => {
+          //   setActiveQuizSetId(quizSetId)
+          //   setQuizView('result')
+          // }}
+
+          // onBackQuizList={() => {
+          //   setQuizView('list')
+          //   setSelectedAssetId(null)
+          //   setActiveQuizSetId(null)
+          // }}
+        />}
       </main>
       
     </>
