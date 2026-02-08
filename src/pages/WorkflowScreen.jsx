@@ -72,6 +72,10 @@ export default function WorkflowScreen({ workflowId, onGoWorkflowList, onOpenWor
     return workflowList.find((wf) => wf.id === workflowId)?.name ?? '워크플로우'
 }, [workflowId, workflowList])
 
+  // useEffect(() => {
+  //   console.log('[SCREEN] workflowId changed ->', workflowId)
+  // }, [workflowId])
+
 useEffect(() => {
     const onDown = (e) => {
         if (wfMenuRef.current && !wfMenuRef.current.contains(e.target)) {
@@ -86,6 +90,12 @@ useEffect(() => {
   const saved = useMemo(() => loadFromLocalStorage(storageKey), [storageKey])
   const [nodes, setNodes] = useState(saved?.nodes ?? initialNodes)
   const [edges, setEdges] = useState(saved?.edges ?? initialEdges)
+
+  useEffect(() => {
+    const next = loadFromLocalStorage(storageKey)
+    setNodes(next?.nodes ?? initialNodes)
+    setEdges(next?.edges ?? initialEdges)
+  }, [storageKey])
 
   const addNewNode = useCallback(() => {
   const newId = `n-${Date.now()}`
@@ -178,7 +188,7 @@ useEffect(() => {
     }
 
     document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mouse', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [wfMenuOpen])
 
   return (
@@ -201,7 +211,7 @@ useEffect(() => {
               // 리스트로 돌아가기 메뉴
                   <div className="wfTop__menu">
 
-                    <div className='wfTop__divider' />
+                    {/* <div className='wfTop__divider' /> */}
 
                     {workflowList.map((wf) => (
                       <button
@@ -209,6 +219,7 @@ useEffect(() => {
                         type="button"
                         className={`wfTop__item ${wf.id === workflowId ? 'is-active' : ''}`}
                         onClick={() => {
+                          console.log('menu click -> open', wf.id)
                           setWfMenuOpen(false)
                           if (wf.id !== workflowId) onOpenWorkflow?.(wf.id)
                         }}
