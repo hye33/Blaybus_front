@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './StudySidePanel.css'
 import MemoViewer from './MemoViewer.jsx'
 import AIAssistantViewer from './AIAssistantViewer.jsx'
 import PDFImage from '../../assets/icons/pdfButton.png'
+import PdfExportPopup from './PdfExportPopup.jsx'
 
 export default function StudySidePanel({ selectedModel }) {
     const [tab, setTab] = React.useState(0)
+    const [pdfPopupOpen, setPdfPopupOpen] = useState(false);
     return <div style={{
         width: '100%',
         height: '100%',
@@ -25,12 +27,14 @@ export default function StudySidePanel({ selectedModel }) {
         </nav>
 
         <div className='side-panel-content'>
-            {tab === 0 && <MemoViewer selectedModel={selectedModel} />}
+            {tab === 0 && <MemoViewer selectedModelId={selectedModel.assetId} />}
             {tab === 1 && <AIAssistantViewer selectedModel={selectedModel} />}
         </div>
 
-        <button className='pdf-export-button'>
+        <button className='pdf-export-button' onClick={() => {setPdfPopupOpen(!pdfPopupOpen)}}>
             <img src={PDFImage} alt="" />
         </button>
+
+        {pdfPopupOpen && <PdfExportPopup modelId={selectedModel.assetId}/>}
     </div >
 }

@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
 import './StudySidePanel.css'
 
-export default function MemoComponent({ id, title, preview, setSelectedMemo }) {
-    const [selected, setSelected] = useState(false)
-    
+export default function MemoComponent({ key, memo, selectedMemo, changeSelectedMemo }) {
     return (
-        <button onClick={() => { setSelectedMemo(0); setSelected(!selected);}}
-            className={`memo-component-view ${selected ? 'active' : ''}`}>
+        <button onClick={() => { changeSelectedMemo(memo)}}
+            className={`memo-component-view ${selectedMemo == null || memo.memoId != selectedMemo.memoId ? '' : 'active'}`}>
             <div className='memo-title preview'>
-                제목
+                {memo.memoTitle}
             </div>
             <div className='memo-content-text'>
-                미리보기
+                {memo.memoContents}
             </div>
         </button >
     )
