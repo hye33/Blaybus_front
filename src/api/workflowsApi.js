@@ -18,10 +18,25 @@ export const WorkflowsAPI = {
   update: (workflowId, { name, data, revision }) =>
     apiFetch(`/api/workflows/${workflowId}`, {
       method: 'PUT',
-      body: { name, data, revision },
+      body: { 
+        // workflowId: Number(workflowId),
+        name,
+        data,
+        // : data ?? { nodes: [], edges: [] },
+        revision: Number(revision) },
     }),
 
-  remove: (workflowId) => apiFetch(`/api/workflows/${workflowId}`, { method: 'DELETE' }),
+  rename: (workflowId, { name, revision }) =>
+    apiFetch(`/api/workflows/${workflowId}/name`, {
+      method: 'PATCH',
+      body: { name, revision: Number(revision) },
+  }),
+
+  remove: (workflowId) =>
+    apiFetch(`/api/workflows/${Number(workflowId)}`, {
+      method: 'DELETE',
+      // body: { workflowId: Number(workflowId) },
+    }),
 
   listNodeFiles: (workflowId, clientNodeId) =>
     apiFetch(`/api/workflows/${workflowId}/nodes/${clientNodeId}/files`),
