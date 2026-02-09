@@ -74,7 +74,7 @@
 }
 
 .wfNode__iconBtn {
-  width: 24px;
+  /* width: 24px; */
   height: 24px;
   display: inline-flex;
   align-items: center;
@@ -214,13 +214,14 @@
 
   min-width: 180px;
   z-index: 30;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-/* .wfTop__divider {
-  height: 1;
-  background: rgba(255, 255, 255, 0.12);
-  margin: 6px 0;
-} */
+.wfTop__menu .wfTop__item:first-child {
+  margin-top: 6px;
+}
+
 
 .wfTop__item {
   background: transparent;

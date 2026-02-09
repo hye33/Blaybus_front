@@ -8,7 +8,6 @@ export default function SingleViewer({ selectedModel, mode, setMode }) {
     const [selectedPart, setSelectedPart] = useState(null)
     return (
         <div className='viewer'>
-            <div>{selectedPart}</div>
             <div className='conversion-container'>
                 <button
                     className={`conversion-button single-part-button ${mode === 'single' ? 'active' : ''}`}
@@ -22,8 +21,8 @@ export default function SingleViewer({ selectedModel, mode, setMode }) {
                     조립도
                 </button>
             </div>
-            {isSelected && <SingleModelViewer selectedPart={selectedPart} setIsSelected={setIsSelected}/>}
-            {!isSelected && <SingleSelectedViewer setSelectedPart={setSelectedPart} setIsSelected={setIsSelected}/>}
+            {isSelected && <SingleModelViewer selectedModel={selectedModel} selectedPart={selectedPart} setIsSelected={setIsSelected}/>}
+            {!isSelected && <SingleSelectedViewer selectedModel={selectedModel} setSelectedPart={setSelectedPart} setIsSelected={setIsSelected}/>}
         </div >
     )
 }

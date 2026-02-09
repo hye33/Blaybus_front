@@ -131,7 +131,7 @@ button {
     position: absolute;
     top: 30px;
     right: 30px;
-    width: 152px;
+    min-width: 120px;
     height: 51px;
     border-radius: 30px;
     border: 1px solid #f88cdc;
@@ -139,6 +139,7 @@ button {
     font-size: 22px;
     background-color: #f88cdc0d;
     z-index: 10;
+    padding: 0 15px;
 
     display: flex;
     align-items: center;
@@ -212,4 +213,22 @@ button {
             #78E8750d,
             #F88CDC33);
     ;
+}
+
+.scroll-view::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scroll-view::-webkit-scrollbar-track {
+    background: none;
+}
+
+.scroll-view::-webkit-scrollbar-thumb {
+    background-color: var(--pink-main-a80);
+    border-radius: 4px;
+}
+
+/* hover */
+.scroll-view::-webkit-scrollbar-thumb:hover {
+    background-color: var(--pink-main);
 }

@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TransformControls, OrbitControls } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useRef } from 'react'
@@ -13,8 +13,11 @@ import { Drone } from '../models/Drone'
 import { RobotGripper } from '../models/Robot_Gripper'
 import { RobotArm } from '../models/Robot_Arm'
 import ModelDescriptionPopup from './ModelDescriptionPopup'
+import axios from 'axios'
+import { getUUID } from '../../uuid'
 
-export default function ModelViewer({ selectedModel, mode, setMode }) {
+
+export default function ModelViewer({ selectedModelId, mode, setMode }) {
     const [d, setD] = useState(0)
     const [x, setX] = useState(0)
     const [y, setY] = useState(0)
@@ -24,6 +27,28 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
     const transformRef = useRef()
 
     const controlsRef = useRef()
+    const [modelDetails, setModelDetails] = useState([]);
+    const uuid = getUUID();
+
+    useEffect(() => {
+        const getModelDetails = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_BASE_URL}/api/assets/${selectedModelId}`, {
+                    headers: {
+                        'X-USER-UUID': uuid,
+                    },
+                });
+                setModelDetails(response.data);
+                console.log(response)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        getModelDetails();
+    }, []);
+
 
     return (
         <div className='viewer'>
@@ -67,7 +92,7 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
                     className={`description-button ${popupOpen ? 'active' : ''}`}
                     onClick={() => setPopupOpen(!popupOpen)}
                 >
-                    {selectedModel}
+                    {modelDetails.assetName}
                 </button>
             </div>
 
@@ -85,50 +110,7 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
                 </button>
             </div>
 
-            {/* x y z 조절용 슬라이더 */}
-            {/* <div style={{ position: 'absolute', top: 120, left: 10, zIndex: 1, color: 'white' }}>
-                <br />
-                <input
-                    type="range"
-                    min={-180}
-                    max={180}
-                    step={1}
-                    value={x}
-                    onChange={(e) => setX(parseFloat(e.target.value))}
-                    style={{
-                        width: 200,
-                    }}
-                />
-                x: {x}
-                <br />
-                <input
-                    type="range"
-                    min={-180}
-                    max={180}
-                    step={1}
-                    value={y}
-                    onChange={(e) => setY(parseFloat(e.target.value))}
-                    style={{
-                        width: 200,
-                    }}
-                />
-                y: {y}
-                <br />
-                <input
-                    type="range"
-                    min={-180}
-                    max={180}
-                    step={1}
-                    value={z}
-                    onChange={(e) => setZ(parseFloat(e.target.value))}
-                    style={{
-                        width: 200,
-                    }}
-                />
-                z: {z}
-            </div> */}
-
-            <div
+            {/* <div
                 style={{
                     position: 'absolute',
                     top: 120,
@@ -138,9 +120,9 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
                 }}
             >
                 Selected: {selected ?? 'None'}
-            </div>
+            </div> */}
 
-            {popupOpen && <ModelDescriptionPopup selectedModel={selectedModel} setPopupOpen={setPopupOpen} />}
+            {popupOpen && <ModelDescriptionPopup modelDetails={modelDetails} setPopupOpen={setPopupOpen} />}
 
             <div style={{width: '100%', height: '100%'}}>
                 <Canvas camera={{ position: [0, 1, 2] }}>
@@ -162,13 +144,13 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
                             }}
                         />
                     )}
-                    {selectedModel === 'suspension' && <Suspension d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 'V4-engine' && <V4Engine d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 'machine-vice' && <MachineVice d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 'leaf-spring' && <LeafSpring d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 'robot-arm' && <RobotArm d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 'robot-gripper' && <RobotGripper d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 'drone' && <Drone d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModelId === 1 && <Drone d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModelId === 2 && <LeafSpring d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModelId === 3 && <MachineVice d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModelId === 4 && <RobotArm d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModelId === 5 && <RobotGripper d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModelId === 6 && <Suspension d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModelId === 7 && <V4Engine d={d} x={x} y={y} z={z} onSelect={setSelected} />}
 
                 </Canvas>
             </div>

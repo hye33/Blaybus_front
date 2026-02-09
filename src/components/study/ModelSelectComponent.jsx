@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function ModelSelectComponent({ label, onClick }) {
+export default function ModelSelectComponent({ label, thumbnailUrl, onClick }) {
     return (
         <div onClick={onClick}
             style={{
@@ -17,7 +17,7 @@ export default function ModelSelectComponent({ label, onClick }) {
                 backgroundColor: '#3e3e40',
                 borderRadius: '5px',
             }}>
-                <img src="" alt="Model Thumbnail" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src={thumbnailUrl} alt="Model Thumbnail" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div style={{
                 width: '100%',

@@ -18,6 +18,11 @@
     --pink-box-shadow: 0 0px 12px rgba(248, 140, 220, 0.5);
 
     --pink-main-a80: #f88cdccc;
+    --pink-main-a50: #f88cdc80;
+    --pink-main-a20: #f88cdc33;
+    --pink-main-a10: #f88cdc1a;
+
+    --green-main-a10: #78e8750d;
 
     --green-to-pink-gradient: linear-gradient(90deg, #78E875, #f88cdc);
 }

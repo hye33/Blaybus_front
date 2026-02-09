@@ -97,11 +97,39 @@
 }
 
 .wfl__grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 44px;
+    display: flex;
+    /* grid-template-columns: repeat(4, minmax(0, 1fr)); */
+    flex-direction: column;
+    gap: 12px;
 }
 
+.wfl__row {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 14px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(120, 232, 117, 0.25);
+    background: rgba(255, 255, 255, 0.02);
+
+    cursor: pointer;
+}
+
+.wfl__row:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.wfl__rowMain {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    flex: 1;
+}
 .wfl__card {
     text-align: left;
     background: transparent;
@@ -146,6 +174,16 @@
     color: var(--green-main);
     font-size: 24px;
     font-weight: 400;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.wfl__sub {
+    font-family: var(--font-main);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 /* .wfl__date {
@@ -337,13 +375,38 @@
     color: var(--pink-main);
 }
 
-.wfl__modalClose {
+/* .wfl__modalClose {
     background: transparent;
     border: 0;
     font-size: 40px;
     line-height: 1;
     color: var(--pink-main);
     cursor: pointer;
+} */
+
+.wfl__modalClose {
+  /* position: absolute;
+  top: 10px;
+  right: 14px; */
+
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  display: grid;
+  place-items: center;
+}
+
+.wfl__modalCloseIcon {
+    display: block;
+    width: 40px;
+    height: 100%;
+    background-color: var(--pink-main);
+
+    -webkit-mask: url("../assets/x-square.png") no-repeat center / 24px 24px;
+    mask: url("../assets/x-square.png") no-repeat center / 24px 24px;
 }
 
 .wfl__modalBody {
