@@ -4,7 +4,7 @@ import MemoViewer from './MemoViewer.jsx'
 import AIAssistantViewer from './AIAssistantViewer.jsx'
 import PDFImage from '../../assets/icons/pdfButton.png'
 
-export default function StudySidePanel() {
+export default function StudySidePanel({ selectedModel }) {
     const [tab, setTab] = React.useState(0)
     return <div style={{
         width: '100%',
@@ -25,8 +25,8 @@ export default function StudySidePanel() {
         </nav>
 
         <div className='side-panel-content'>
-            {tab === 0 && <MemoViewer />}
-            {tab === 1 && <AIAssistantViewer />}
+            {tab === 0 && <MemoViewer selectedModel={selectedModel} />}
+            {tab === 1 && <AIAssistantViewer selectedModel={selectedModel} />}
         </div>
 
         <button className='pdf-export-button'>

@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PartSelectComponent from './PartSelectComponent';
+import { getUUID } from '../../uuid'
+import axios from 'axios'
 
 export const modelList = [
     {
@@ -32,7 +34,25 @@ export const modelList = [
     },
 ]
 
-export default function SingleSelectedViewer({ setSelectedPart, setIsSelected }) {
+export default function SingleSelectedViewer({ selectedModel, setSelectedPart, setIsSelected }) {
+    const [parts, setParts] = useState([]);
+    const uuid = getUUID();
+
+    useEffect(() => {
+        const getParts = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.REACT_APP_API_BASE_URL}/api/assets/${selectedModel.assetId}/parts`);
+                setParts(response.data);
+                console.log(response);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        getParts();
+    }, []);
+
     return (
         <div style={{
             width: '100%',
@@ -40,17 +60,18 @@ export default function SingleSelectedViewer({ setSelectedPart, setIsSelected })
             boxSizing: 'border-box',
 
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: 'repeat(4, 1fr)',
             gridTemplateRows: 'repeat(3, 1fr)',
             gap: '35px 50px',
             padding: 60,
             paddingTop: 110,
         }}>
-            {modelList.map((model) => (
+            {parts.map((model) => (
                 <PartSelectComponent
-                    key={model.id}
-                    label={model.label}
-                    onClick={() => {setSelectedPart(model.id); setIsSelected(true);}}
+                    key={model.partId}
+                    label={model.partName}
+                    thumbnailUrl={model.partThumbnailUrl}
+                    onClick={() => { setSelectedPart(model); setIsSelected(true);}}
                 />
             ))}
         </div>

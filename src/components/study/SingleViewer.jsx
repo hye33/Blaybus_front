@@ -21,8 +21,8 @@ export default function SingleViewer({ selectedModel, mode, setMode }) {
                     조립도
                 </button>
             </div>
-            {isSelected && <SingleModelViewer selectedPart={selectedPart} setIsSelected={setIsSelected}/>}
-            {!isSelected && <SingleSelectedViewer setSelectedPart={setSelectedPart} setIsSelected={setIsSelected}/>}
+            {isSelected && <SingleModelViewer selectedModel={selectedModel} selectedPart={selectedPart} setIsSelected={setIsSelected}/>}
+            {!isSelected && <SingleSelectedViewer selectedModel={selectedModel} setSelectedPart={setSelectedPart} setIsSelected={setIsSelected}/>}
         </div >
     )
 }

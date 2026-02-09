@@ -1,25 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './DescriptionPopup.css'
 import closeButton from '../../assets/icons/closeButton.png';
+import axios from 'axios';
 
-export default function ModelDescriptionPopup({ selectedModel, setPopupOpen }) {
+export default function ModelDescriptionPopup({ modelDetails, setPopupOpen }) {
+    const parts = modelDetails.parts;
+    // 마저 이어서 연결 ㄱ
     return (
         <div className="description-viewer">
-            <span className='model-name-text'>{selectedModel}</span>
+            <span className='model-name-text'>{modelDetails.assetName}</span>
             <button className='close-button' onClick={() => setPopupOpen(false)}>
                 <img src={closeButton} alt="close button" />
             </button>
 
             <div className='model-description-text'>
-                {selectedModel}에 대한 자세한 설명이 여기에 표시됩니다. 이 모델은 다양한 부품으로 구성되어 있으며, 각 부품은 특정 기능을 수행합니다.
+                {modelDetails.assetDescription}
             </div>
 
             <div className='line-divider' />
 
             <div className="part-images-container">
-                <div className='part-image-box'>
-                    <img src="" alt="Part 1" className='part-image' />
-                </div>
+                {parts.length > 0 && (
+                    parts.map((part, index) => (
+                        <div className='part-image-box'>
+                            <img src={part.partThumbnailUrl} alt={part.partName} className='part-image' />
+                        </div>
+                    ))
+                )}
             </div>
 
             {/* scrollview */}
@@ -32,36 +39,20 @@ export default function ModelDescriptionPopup({ selectedModel, setPopupOpen }) {
                     marginTop: '25px'
                 }}
             >
-                <div className='selected-part-text-container'>
-                    <div className='selected-part-name'>{selectedModel}</div>
-                    <div className='selected-part-description'>
-                        {selectedModel}의 부품에 대한 설명이 여기에 표시됩니다. 이 부품은 모델의 핵심 요소로서, 전체 시스템에서 중요한 역할을 합니다.
-                    </div>
-                </div>
-                <div className='selected-part-text-container'>
-                    <div className='selected-part-name'>{selectedModel}</div>
-                    <div className='selected-part-description'>
-                        {selectedModel}의 부품에 대한 설명이 여기에 표시됩니다. 이 부품은 모델의 핵심 요소로서, 전체 시스템에서 중요한 역할을 합니다.
-                    </div>
-                </div>
-                <div className='selected-part-text-container'>
-                    <div className='selected-part-name'>{selectedModel}</div>
-                    <div className='selected-part-description'>
-                        {selectedModel}의 부품에 대한 설명이 여기에 표시됩니다. 이 부품은 모델의 핵심 요소로서, 전체 시스템에서 중요한 역할을 합니다.
-                    </div>
-                </div>
-                <div className='selected-part-text-container'>
-                    <div className='selected-part-name'>{selectedModel}</div>
-                    <div className='selected-part-description'>
-                        {selectedModel}의 부품에 대한 설명이 여기에 표시됩니다. 이 부품은 모델의 핵심 요소로서, 전체 시스템에서 중요한 역할을 합니다.
-                    </div>
-                </div>
-                <div className='selected-part-text-container'>
-                    <div className='selected-part-name'>{selectedModel}</div>
-                    <div className='selected-part-description'>
-                        {selectedModel}의 부품에 대한 설명이 여기에 표시됩니다. 이 부품은 모델의 핵심 요소로서, 전체 시스템에서 중요한 역할을 합니다.
-                    </div>
-                </div>
+                {parts && parts.length > 0 ? (
+                    parts.map((part, index) => (
+                        <div className='selected-part-text-container' key={part.id || index}>
+                            <div className='selected-part-name'>
+                                {part.partName}
+                            </div>
+                            <div className='selected-part-description'>
+                                {part.partDescription}
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className='no-data-text'>파츠 정보가 없습니다.</div>
+                )}
             </div>
         </div>
     )
