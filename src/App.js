@@ -1,6 +1,7 @@
 import './App.css'
 import { useState } from 'react'
 
+import LandingScreen from './pages/LandingScreen.jsx'
 import HomeScreen from './pages/HomeScreen.jsx'
 import StudyScreen from './pages/StudyScreen.jsx'
 import WorkflowListScreen from './pages/WorkflowListScreen.jsx'
@@ -26,6 +27,10 @@ function App() {
     setActiveWorkflowId(null)
   }
 
+  if (tab === 0) {
+    return <LandingScreen onStart={() => setTab(1)} />
+  }
+
   return (
     <>
       <Navbar
@@ -34,12 +39,16 @@ function App() {
           setTab(next)
           if (next === 2) backToWorkflowList()
         }}
+        onClickLogo={() => {
+          setTab(0)
+          backToWorkflowList()
+        }}
       />
       
       <main className="app-layout">
-        {tab === 0 && <HomeScreen setSelectedModel={setSelectedModel} setTab={setTab} />}
-        {tab === 1 && <StudyScreen selectedModel={selectedModel} />}
-        {tab === 2 && (
+        {tab === 1 && <HomeScreen setSelectedModel={setSelectedModel} setTab={setTab} />}
+        {tab === 2 && <StudyScreen selectedModel={selectedModel} />}
+        {tab === 3 && (
           workflowView === 'list'
           ? <WorkflowListScreen onOpenWorkflow={openWorkflow} />
           : (<WorkflowScreen
@@ -48,7 +57,7 @@ function App() {
               onOpenWorkflow={openWorkflow}
             />)
         )}
-        {tab === 3 && <QuizScreen />}
+        {tab === 4 && <QuizScreen />}
       </main>
       
     </>
