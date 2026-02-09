@@ -1,9 +1,9 @@
 .description-viewer {
     position: absolute;
-    top: 15%;
+    top: 100px;
     right: 30px;
     width: 30%;
-    height: 60%;
+    height: 70%;
     background-color: #F88CDC0d;
     border: 1px solid var(--pink-main);
     border-radius: 10px;
@@ -58,13 +58,14 @@
     margin: 25px 0;
 }
 
-.part-image-container {
+.part-images-container {
     width: 100%;
     height: auto;
-    display: flex;
-    flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .part-image-box {
@@ -88,7 +89,7 @@
     object-fit: cover;
 }
 
-.selected-part-text-container{
+.selected-part-text-container {
     margin-bottom: 20px;
 }
 
