@@ -124,8 +124,11 @@ export default function ModelViewer({ selectedModelId, mode, setMode }) {
 
             {popupOpen && <ModelDescriptionPopup modelDetails={modelDetails} setPopupOpen={setPopupOpen} />}
 
-            <div style={{width: '100%', height: '100%'}}>
-                <Canvas camera={{ position: [0, 1, 2] }}>
+            <div id='model-canvas-view' style={{width: '100%', height: '100%'}}>
+                <Canvas camera={{ position: [0, 1, 2] }}
+                    gl={{ preserveDrawingBuffer: true }}
+                    alpha={false}
+                    >
                     <OrbitControls ref={controlsRef} target={[0, 0, 0]} maxDistance={5} />
                     {/* <color attach="background" args={['#141414']} /> */}
                     {/* <axesHelper args={[200, 200, 200]} /> */}
