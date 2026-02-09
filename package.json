@@ -9,6 +9,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.13.5",
     "@xyflow/react": "^12.10.0",
     "gltfjsx": "^6.5.3",
     "html2canvas": "^1.4.1",
@@ -18,9 +19,12 @@
     "three": "^0.182.0",
     "web-vitals": "^2.1.4"
   },
+  "overrides": {
+    "camera-controls": "2.9.0"
+  },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

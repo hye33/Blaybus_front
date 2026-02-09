@@ -1,53 +1,82 @@
-import React from 'react'
-import ModelSelectComponent from '../components/ModelSelectComponent'
+import React, { useEffect, useState } from 'react'
+import ModelSelectComponent from '../components/study/ModelSelectComponent'
+import { getUUID } from '../uuid';
+import axios from 'axios';
 
 export const modelList = [
     {
-        id: 'suspension',
-        label: 'Suspension'
+        assetId: 'suspension',
+        assetName: 'Suspension'
     },
     {
-        id: 'robot-gripper',
-        label: 'Robot Gripper'
+        assetId: 'robot-gripper',
+        assetName: 'Robot Gripper'
     },
     {
-        id: 'drone',
-        label: 'Drone'
+        assetId: 1,
+        assetName: 'Drone'
     },
     {
-        id: 'leaf-spring',
-        label: 'Leaf Spring'
+        assetId: 'leaf-spring',
+        assetName: 'Leaf Spring'
     },
     {
-        id: 'machine-vice',
-        label: 'Machine Vice'
+        assetId: 'machine-vice',
+        assetName: 'Machine Vice'
     },
     {
-        id: 'robot-arm',
-        label: 'Robot Arm'
+        assetId: 'robot-arm',
+        assetName: 'Robot Arm'
     },
     {
-        id: 'V4-engine',
-        label: 'V4 Engine'
+        assetId: 'V4-engine',
+        assetName: 'V4 Engine'
     },
 ]
 
 export default function HomeScreen({ setSelectedModel, setTab }) {
+    const [assets, setAssets] = useState([]);
+    const uuid = getUUID();
+
+    useEffect(() => {
+        const getAssets = async () => {
+            try {
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/assets`, {
+                    headers: {
+                        'X-USER-UUID': uuid,
+                    },
+                });
+                setAssets(response.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        getAssets();
+    }, []);
+
     return (
         <div style={{
             width: '100%',
             height: '100%',
+            boxSizing: 'border-box',
 
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: 10,
-            padding: 10,
+            gridTemplateRows: 'repeat(2, 2fr) 1fr',
+            gap: '50px 50px',
+            padding: 70,
+
+            border: '1px solid var(--green-main)',
+            boxShadow: 'var(--green-box-shadow)',
+            borderRadius: 10,
         }}>
-            {modelList.map((model) => (
+            {assets.map((model) => (
                 <ModelSelectComponent
-                    key={model.id}
-                    label={model.label}
-                    onClick={() => {setSelectedModel(model.id); setTab(1)}}
+                    key={model.assetId}
+                    label={model.assetName}
+                    thumbnailUrl={model.assetThumbnailUrl}
+                    onClick={() => { setSelectedModel(model); setTab(1) }}
                 />
             ))}
         </div>
