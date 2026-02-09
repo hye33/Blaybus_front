@@ -1,62 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
+import { apiFetch } from '../api/apiClient'
+import { QuizzesAPI } from '../api/quizzesApi'
 import '../styles/QuizPlayScreen.css'
-
-const DEV_MODE = true
-
-// 더미(quizList가 비어있을 때 로딩용)
-function mockGetQuizSet(quizSetId, assetId) {
-  return [
-    {
-      quizSetId,
-      assetId,
-      quizSetItemId: 101,
-      question: '1. 우리나라의 수도는?',
-      options: ['서울', '토론토', '도쿄', '워싱턴'],
-      answer: 0,
-      explanation: '대한민국의 수도는 서울입니다.',
-      hint: 'ㅅㅇ',
-    },
-    {
-      quizSetId,
-      assetId,
-      quizSetItemId: 102,
-      question: '2. 2 + 2 = ?',
-      options: ['1', '2', '3', '4'],
-      answer: 3,
-      explanation: '2+2=4',
-      hint: '두 개씩 두 번',
-    },
-    {
-      quizSetId,
-      assetId,
-      quizSetItemId: 103,
-      question: '3. 지구는 몇 번째 행성?',
-      options: ['1', '2', '3', '4'],
-      answer: 2,
-      explanation: '태양계에서 지구는 3번째 행성입니다.',
-      hint: '수금지화목토천해',
-    },
-    {
-      quizSetId,
-      assetId,
-      quizSetItemId: 104,
-      question: '4. 바다의 색은?',
-      options: ['빨강', '파랑', '보라', '주황'],
-      answer: 1,
-      explanation: '보통 파랗게 보입니다.',
-      hint: 'sky',
-    },
-  ]
-}
 
 export default function QuizPlayScreen({
   userUuid,
   assetId,
   quizSetId,
-  quizList,     // create에서 받은 전체 문항 리스트 (있으면 그대로 사용)
-  onBack,       // 뒤로(Asset/History로)
-  onFinish,     // 제출 성공 후 다음 화면 이동용(선택)
+  quizList,     // create에서 받은 전체 문항 리스트
+  onBack,       // 뒤로 가기
+  onFinish,     // 제출 성공 후 다음 화면 이동용
 }) {
+
   // 실제로 사용할 문항 리스트
   const [items, setItems] = useState(() => (Array.isArray(quizList) ? quizList : []))
   const [loading, setLoading] = useState(false)
@@ -76,7 +31,6 @@ export default function QuizPlayScreen({
     let alive = true
 
     async function run() {
-      // quizList가 이미 있으면 fetch 불필요
       if (Array.isArray(quizList) && quizList.length > 0) return
 
       setLoading(true)
@@ -84,16 +38,10 @@ export default function QuizPlayScreen({
 
       try {
         let data = []
-        if (DEV_MODE) {
-          data = mockGetQuizSet(quizSetId, Number(assetId))
-        } else {
-          // 풀었던 퀴즈 다시 불러오기: /api/quizzes/quiz-set/{quizSetId}
-          const res = await fetch(`/api/quizzes/quiz-set/${quizSetId}`, {
-            headers: { ...(userUuid ? { 'X-USER-UUID': userUuid } : {}) },
-          })
-          if (!res.ok) throw new Error(`HTTP ${res.status}`)
-          data = await res.json()
-        }
+        // 풀었던 퀴즈 다시 불러오기: /api/quizzes/quiz-set/{quizSetId}
+        data = await apiFetch(`/api/quizzes/quiz-set/${quizSetId}`, {
+          method: 'POST',
+        })
 
         if (!alive) return
         setItems(Array.isArray(data) ? data : [])
@@ -167,53 +115,22 @@ export default function QuizPlayScreen({
       })),
     }
 
-    // if (payload.answers.some(a => a.userChoice == null)) {
-    //   alert('아직 선택하지 않은 문제가 있습니다')
-    //   return
-    // }
+    console.log('submit payload', payload)
+    console.log('quizSetId', quizSetId, 'userUuid', userUuid)
+
     if (payload.answers.some(a => a.userChoice == null)) return
 
     setLoading(true)
     setError('')
 
     try {
-      let result
+      const result = await QuizzesAPI.submitAttempt(
+      quizSetId,
+      payload,
+      userUuid
+    )
 
-      if (DEV_MODE) {
-        // 더미 성공 처리
-        result = { quizAttemptId: 999, submitted: true }
-
-        result = {
-            quizAttemptId: 999,
-            quizSetId,
-            createdAt: new Date().toISOString(),
-            totalCount: items.length,
-            correctCount: 0,
-            details: items.map((q) => ({
-                quizSetItemId: q.quizSetItemId,
-                question: q.question,
-                explanation: q.explanation,
-                hint: q.hint,
-                options: q.options,
-                answer: q.answer,
-                userChoice: selectedByItemId[q.quizSetItemId],
-                isCorrect: selectedByItemId[q.quizSetItemId] === q.answer,
-            })),
-        }
-      } else {
-        const res = await fetch(`/api/quizzes/quiz-set/${quizSetId}/attempts`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(userUuid ? { 'X-USER-UUID': userUuid } : {}),
-          },
-          body: JSON.stringify(payload),
-        })
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        result = await res.json()
-      }
-
-      // 제출 성공 → 다음 화면으로
+      // 제출 성공 -> 다음 화면으로
       onFinish?.({ quizSetId, assetId, result })
     } catch (e) {
       console.error(e)

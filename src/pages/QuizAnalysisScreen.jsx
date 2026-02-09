@@ -1,22 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import { QuizzesAPI } from '../api/quizzesApi'
 import '../styles/QuizAnalysisScreen.css'
-
-const DEV_MODE = true
-
-function mockAiReview(quizAttemptId) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        quizAttemptId,
-        aiReview:
-          "[총평]\n기본 구성요소와 역할에서 혼동이 있네요.\n각 부품의 '무엇을 하는지'를 기능 중심으로 정리하면 빠르게 개선될 수 있어요.\n" +
-          "[핵심 오답 분석]\n1) 피스톤(정답 3, 선택 0): 연소에너지→기계적 회전으로 변환하는 역할임을 놓치셨습니다.\n2) 실린더 헤드(정답 1, 선택 2): 밸브·점화플러그 장착과 연소실 밀폐 기능이 핵심입니다.\n3) 터보차저(정답 0, 선택 1): 배기가스로 구동해 흡입공기를 압축, 출력 향상이 목적입니다.\n4) V6 배열(정답 1, 선택 3): 두 개의 3기통 뱅크가 V자 형태로 배열됩니다.\n\n" +
-          "[향후 학습 가이드]\n엔진 단면도 보며 각 부품의 역할을 말로 설명해보세요. 터빈·압축기 작동 원리 영상과 V6 구성도 반복 학습하면 도움이 됩니다. 응원해요!",
-        createdAt: new Date().toISOString(),
-      })
-    }, 1200)
-  })
-}
 
 function parseAiReview(text = '') {
   const sections = { summary: '', wrong: '', guide: '' }
@@ -40,6 +24,8 @@ function parseAiReview(text = '') {
 }
 
 export default function QuizAnalysisScreen({ userUuid, quizAttemptId, onClose }) {
+  // console.log('[AI SCREEN PROPS]', { quizAttemptId, userUuid })
+  
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [data, setData] = useState(null)
@@ -60,25 +46,7 @@ export default function QuizAnalysisScreen({ userUuid, quizAttemptId, onClose })
 
         let json
 
-        if (DEV_MODE) {
-          json = await mockAiReview(quizAttemptId)
-        } else {
-          const res = await fetch(`/api/quizzes/ai-analysis/${quizAttemptId}`, {
-            method: 'GET',
-            headers: { ...(userUuid ? { 'X-USER-UUID': userUuid } : {}) },
-          })
-
-          const raw = await res.text()
-          console.log('[AI] status:', res.status, 'raw:', raw)
-
-          if (!res.ok) throw new Error(`HTTP_${res.status}`)
-
-          try {
-            json = JSON.parse(raw)
-          } catch {
-            throw new Error('INVALID_JSON')
-          }
-        }
+        json = await QuizzesAPI.aiAnalyze(quizAttemptId, userUuid)
 
         // 최소 로딩 시간 보장
         const elapsed = Date.now() - started

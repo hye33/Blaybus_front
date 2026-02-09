@@ -1,12 +1,22 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { QuizzesAPI } from '../api/quizzesApi'
+import { toSeoulTime } from '../utils/time'
 import '../styles/QuizResultScreen.css'
 
 export default function QuizResultScreen({
+  userUuid,
+  assetId,
+  quizSetId,
   attemptDetail,
   onClose,
   onAiAnalyze,
 }) {
+  const createdText = attemptDetail?.createdAt
+  ? toSeoulTime(attemptDetail.createdAt)
+  : ''
+
   const loading = !attemptDetail
+
   const details = useMemo(
     () => (Array.isArray(attemptDetail?.details) ? attemptDetail.details : []),
     [attemptDetail]
@@ -15,14 +25,44 @@ export default function QuizResultScreen({
   const correctCount = attemptDetail?.correctCount ?? 0
   const totalCount = attemptDetail?.totalCount ?? details.length ?? 0
 
-  const createdText = useMemo(() => {
-    if (!attemptDetail?.createdAt) return ''
-    try {
-      return new Date(attemptDetail.createdAt).toLocaleString()
-    } catch {
-      return String(attemptDetail.createdAt)
+  // const createdText = useMemo(() => {
+  //   if (!attemptDetail?.createdAt) return ''
+  //   try {
+  //     return new Date(attemptDetail.createdAt).toLocaleString()
+  //   } catch {
+  //     return String(attemptDetail.createdAt)
+  //   }
+  // }, [attemptDetail])
+
+  const [attempts, setAttempts] = useState([])
+  const [attemptsLoading, setAttemptsLoading] = useState(false)
+  const [attemptsError, setAttemptsError] = useState('')
+
+  useEffect(() => {
+    let alive = true
+    if (!assetId || !quizSetId) return
+
+    async function run() {
+      setAttemptsLoading(true)
+      setAttemptsError('')
+      try {
+        const data = await QuizzesAPI.listAttempts(assetId, quizSetId)
+        if (!alive) return
+        setAttempts(Array.isArray(data) ? data : [])
+      } catch (e) {
+        console.error(e)
+        if (!alive) return
+        setAttempts([])
+        setAttemptsError('히스토리를 불러오지 못했어요.')
+      } finally {
+        if (!alive) return
+        setAttemptsLoading(false)
+      }
     }
-  }, [attemptDetail])
+
+    run()
+    return () => { alive = false }
+  }, [assetId, quizSetId, userUuid])
 
   return (
     <section className="qr">
@@ -47,7 +87,7 @@ export default function QuizResultScreen({
             <button
               className="qr__aiBtn"
               type="button"
-              onClick={() => onAiAnalyze?.({ quizAttemptId: attemptDetail?.quizAttemptId })}
+              onClick={() => onAiAnalyze?.(attemptDetail?.quizAttemptId)}
               disabled={loading}
               title={loading ? '결과를 불러오는 중이에요' : ''}
             >
@@ -79,7 +119,7 @@ export default function QuizResultScreen({
                         const isAnswer = d.answer === oi
                         const isUser = d.userChoice === oi
 
-                        // 표시 우선순위: 내 선택(✓/×) + 정답(○)
+                        // 표시 우선순위: 내 선택(○/×) + 정답(○)
                         let mark = ''
                         if (isUser) mark = d.isCorrect ? '○' : '×'
                         else if (isAnswer) mark = '○'

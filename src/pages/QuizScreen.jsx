@@ -70,7 +70,7 @@ export default function QuizScreen({ userUuid }) {
         onBack={() => setQuizView('asset')}
         onRetryQuiz={(id) => {
           setQuizSetId(id);
-          setCurrentQuizList([]); // 히스토리에서 다시풀기: QuizPlayScreen에서 GET으로 불러오게
+          setCurrentQuizList([]); // 히스토리에서 다시풀기: QuizPlayScreen에서 GET으로 불러오기
           resetAttempt();
           setQuizView('play');
         }}
@@ -87,7 +87,8 @@ export default function QuizScreen({ userUuid }) {
         quizList={currentQuizList}
         onBack={() => setQuizView('asset')}
         onFinish={({ result }) => {
-          // submit 응답(details 포함) 저장 후 result로 이동
+          // submit 응답 저장 후 result로 이동
+          console.log('[SUBMIT RESULT]', result)
           setLatestAttemptDetail(result || null);
           setQuizView('result');
         }}
@@ -103,8 +104,8 @@ export default function QuizScreen({ userUuid }) {
         quizSetId={quizSetId}
         attemptDetail={latestAttemptDetail}
         onClose={() => setQuizView('asset')}
-        onAiAnalyze={() => {
-          setQuizAttemptIdForAi(latestAttemptDetail?.quizAttemptId ?? null)
+        onAiAnalyze={(attemptId) => {
+          setQuizAttemptIdForAi(attemptId ?? null)
           setQuizView('ai')
         }}
       />

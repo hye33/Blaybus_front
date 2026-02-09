@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState, useRef } from 'react'
+import { apiFetch } from '../api/apiClient'
+// import { QuizzesAPI } from '../api/quizzesApi'
 import '../styles/QuizListScreen.css'
 import chevronDown from '../assets/chevron-down.png'
-import { DEV_MODE, MOCK_QUIZZABLE_ASSETS } from '../mock/mockQuiz'
-// import { div } from 'three/tsl'
 
-// const LIST_KEY = 'quiz:index'
-
-export default function QuizListScreen({ userUuid, onOpenQuizAsset }) {
+export default function QuizListScreen({ onOpenQuizAsset }) {
+// console.log('[QuizListScreen] render', { DEV_MODE })
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [errorMsg, setErrorMsg] = useState('')
@@ -21,68 +20,45 @@ export default function QuizListScreen({ userUuid, onOpenQuizAsset }) {
   const [sortOpen, setSortOpen] = useState(false)
   const sortRef = useRef(null)
 
-//   메뉴 외부 클릭 시 닫기
+// 메뉴 외부 클릭 시 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
         if (sortRef.current && !sortRef.current.contains(event.target)) setSortOpen(false)
-        
-        // const insideCardMenu = event.target.closest('.wfl__menuWrap')
-        // if (!insideCardMenu) setActiveMenuId(null) // 메뉴 내부 클릭은 무시
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
-}, [])
+    }, [])
 
   useEffect(() => {
-    // 실제 API
+    console.log('[QuizListScreen] useEffect fired')
     let alive = true
 
     async function fetchAssets() {
         setLoading(true)
         setErrorMsg('')
 
-        if (DEV_MODE) {
-            setItems(MOCK_QUIZZABLE_ASSETS)
-            setLoading(false)
-            return
-        }
-
         try {
-            const res = await fetch('/api/quizzes/quizzable-assets', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'applicaiton/json',
-                    ...(userUuid ? { 'X-USER-UUID': userUuid } : {}),
-                },
-            })
-
-            if (!res.ok) {
-                const text = await res.text().catch(() => '')
-                throw new Error(`HTTP $(res.status' ${text}`)
-            }
-
-            const data = await res.json()
+            console.log('[QuizListScreen] calling apiFetch...')
+            const data = await apiFetch('/api/assets')
+            console.log('[QuizListScreen] got', data)
             if (!alive) return
-
             setItems(Array.isArray(data) ? data : [])
-        } catch (err) {
+            } catch (err) {
             if (!alive) return
             setItems([])
             setErrorMsg('퀴즈 목록을 불러오지 못했습니다.')
             console.error(err)
-        } finally {
+            } finally {
             if (!alive) return
             setLoading(false)
+            }
         }
-    }
 
     fetchAssets()
-    return () => {
-        alive = false
-    }
-  }, [userUuid])
+    return () => { alive = false }
+    }, [])
 
-//   파일 정렬
+// 파일 정렬
   const sortLabel = useMemo(() => {
     return SORTS.find((s) => s.key === sortKey)?.label ?? '최신순'
   }, [sortKey])
@@ -98,15 +74,12 @@ export default function QuizListScreen({ userUuid, onOpenQuizAsset }) {
     const getName = (x) => (x?.assetName ?? x?.name ?? '').toString()
 
     switch (sortKey) {
-      case 'updated_asc':
-        return arr.sort((a, b) => getTime(a.updatedAt) - getTime(b.updatedAt))
-      case 'name_asc':
-        return arr.sort((a, b) => getName(a).localeCompare(getName(b), 'ko'))
-      case 'recent_used':
-        return arr.sort((a, b) => getTime(b.lastOpenedAt || b.updatedAt) - getTime(a.lastOpenedAt || a.updatedAt))
-      case 'updated_desc':
-      default:
-        return arr.sort((a, b) => getTime(b.updatedAt) - getTime(a.updatedAt))
+        case 'updated_asc':
+            return arr.sort((a, b) => getTime(a.lastAccessedAt) - getTime(b.lastAccessedAt))
+        case 'recent_used':
+        case 'updated_desc':
+        default:
+            return arr.sort((a, b) => getTime(b.lastAccessedAt) - getTime(a.lastAccessedAt))
     }
   }, [items, sortKey])
 
@@ -118,10 +91,7 @@ export default function QuizListScreen({ userUuid, onOpenQuizAsset }) {
                 <div className='qls__sort qls__menuWrap' ref={sortRef}>
                     <button
                         className="qls__menuBtn qls__sortBtn"
-                        onClick={() => {
-                            // setActiveMenuId(null)
-                            setSortOpen((v) => !v)
-                        }}
+                        onClick={() => setSortOpen((v) => !v)}
                         type='button'
                     >
                         <span className='qls__sortLabel'>{sortLabel}</span>
@@ -170,27 +140,29 @@ export default function QuizListScreen({ userUuid, onOpenQuizAsset }) {
                         const assetId = asset.assetId ?? asset.id
                         const title = asset.assetName ?? asset.name ?? `asset-${assetId}`
 
+                        const thumb = asset.assetThumbnailUrl
+
                         return (
                             <button
                                 key={assetId}
                                 className='qls__card'
                                 type='button'
-                                onClick={() => onOpenQuizAsset?.(assetId)}
+                                onClick={() => onOpenQuizAsset(assetId)}
                                 >
                                 <div className='qls__thumb'>
-                                    {asset.thumbnailDataUrl ? (
-                                        <img src="{asset.thumbnailUrl" alt="" />
+                                    {thumb ? (
+                                        <img src={thumb} alt='' />
                                     ) : (
                                         <div className='qls__thumbPlaceholder'>No Preview</div>
                                     )}
                                 </div>
                                 <div className='qls__meta'>
                                     <div className='qls__name'>{title}</div>
-                                    {asset.updatedAt && (
+                                    {/* {asset.updatedAt && (
                                         <div className='qls__sub'>
                                             {new Date(asset.updatedAt).toLocaleDateString()}
                                         </div>
-                                    )}
+                                    )} */}
                                 </div>
                             </button>
                         )
