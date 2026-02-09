@@ -1,10 +1,11 @@
 // src/api/apiClient.js
-const API_BASE = 'https://api.hyeonserver.shop'
-const USER_UUID = 'test-uuid-001' // TODO: 로그인 붙이면 교체
+import { getUUID } from '../uuid'
+
+const API_BASE = process.env.REACT_APP_API_BASE_URL || 'https://api.hyeonserver.shop'
 
 export async function apiFetch(path, { method = 'GET', body, isFormData = false } = {}) {
   const headers = {
-    'X-USER-UUID': USER_UUID,
+    'X-USER-UUID': getUUID(),
   }
 
   if (body && !isFormData) headers['Content-Type'] = 'application/json'
