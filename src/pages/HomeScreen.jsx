@@ -76,7 +76,7 @@ export default function HomeScreen({ setSelectedModel, setTab }) {
                     key={model.assetId}
                     label={model.assetName}
                     thumbnailUrl={model.assetThumbnailUrl}
-                    onClick={() => { setSelectedModel(model); setTab(1) }}
+                    onClick={() => { setSelectedModel(model); setTab(2) }}
                 />
             ))}
         </div>
