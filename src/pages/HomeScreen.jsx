@@ -47,6 +47,7 @@ export default function HomeScreen({ setSelectedModel, setTab }) {
                     },
                 });
                 setAssets(response.data);
+                console.log(response)
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -71,7 +72,7 @@ export default function HomeScreen({ setSelectedModel, setTab }) {
             boxShadow: 'var(--green-box-shadow)',
             borderRadius: 10,
         }}>
-            {assets.map((model) => (
+            {assets.filter((model) => model.assetId != 4).map((model) => (
                 <ModelSelectComponent
                     key={model.assetId}
                     label={model.assetName}
