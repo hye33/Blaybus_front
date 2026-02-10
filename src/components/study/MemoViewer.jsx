@@ -148,6 +148,8 @@ export default function MemoViewer({ selectedModelId }) {
                             'isImportant': false,
                             'memoId': 0
                         }
+                        setTitle("")
+                        setContent("")
                         setMemoList([...memoList, newMemo]);
                         setIsNewMemo(true);
                         changeSelectedMemo(newMemo);
@@ -179,7 +181,7 @@ export default function MemoViewer({ selectedModelId }) {
                 <input type='text' className='memo-title' placeholder='제목'
                     value={title}
                     onChange={(e) => setTitle(e.target.value)} />
-                <textarea type='' className='memo-content-text' placeholder='본문'
+                <textarea className='memo-content-text' placeholder='본문'
                     value={content}
                     onChange={(e) => setContent(e.target.value)} />
                 <button className="memo-bookmark" onClick={() => { setIsImportant(!isImportant); addBookmark(); }}>
