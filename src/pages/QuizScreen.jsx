@@ -1,5 +1,127 @@
-import React from 'react'
+import { useState } from "react";
+import QuizListScreen from "./QuizListScreen";
+import QuizAssetScreen from "./QuizAssetScreen";
+import QuizHistoryScreen from "./QuizHistoryScreen";
+import QuizPlayScreen from "./QuizPlayScreen";
+import QuizResultScreen from "./QuizResultScreen";
+import QuizAnalysisScreen from "./QuizAnalysisScreen";
 
-export default function QuizScreen() {
-    return <div>Quiz Screen</div>
+export default function QuizScreen({ userUuid }) {
+  const [quizView, setQuizView] = useState('list');
+  const [assetId, setAssetId] = useState(null);
+  const [quizSetId, setQuizSetId] = useState(null);
+
+  const [currentQuizList, setCurrentQuizList] = useState([]);
+
+  const [latestAttemptDetail, setLatestAttemptDetail] = useState(null);
+  const [quizAttemptIdForAi, setQuizAttemptIdForAi] = useState(null)
+
+  const resetAttempt = () => setLatestAttemptDetail(null);
+
+  if (quizView === 'list') {
+    return (
+      <QuizListScreen
+        userUuid={userUuid}
+        onOpenQuizAsset={(id) => {
+          setAssetId(id);
+          setQuizSetId(null);
+          setCurrentQuizList([]);
+          resetAttempt();
+          setQuizView('asset');
+        }}
+      />
+    );
+  }
+
+  if (quizView === 'asset') {
+    return (
+      <QuizAssetScreen
+        userUuid={userUuid}
+        assetId={assetId}
+        onBack={() => {
+          setQuizView('list');
+          setAssetId(null);
+          setQuizSetId(null);
+          setCurrentQuizList([]);
+          resetAttempt();
+        }}
+        onStartQuiz={(nextQuizSetId, quizList) => {
+          setQuizSetId(nextQuizSetId);
+          setCurrentQuizList(quizList || []);
+          resetAttempt();
+          setQuizView('play');
+        }}
+        onOpenHistory={(clickedQuizSetId) => {
+          setQuizSetId(clickedQuizSetId);
+          setCurrentQuizList([]);
+          resetAttempt();
+          setQuizView('history');
+        }}
+      />
+    );
+  }
+
+  if (quizView === 'history') {
+    return (
+      <QuizHistoryScreen
+        userUuid={userUuid}
+        assetId={assetId}
+        quizSetId={quizSetId}
+        onBack={() => setQuizView('asset')}
+        onRetryQuiz={(id) => {
+          setQuizSetId(id);
+          setCurrentQuizList([]); // 히스토리에서 다시풀기: QuizPlayScreen에서 GET으로 불러오기
+          resetAttempt();
+          setQuizView('play');
+        }}
+      />
+    );
+  }
+
+  if (quizView === 'play') {
+    return (
+      <QuizPlayScreen
+        userUuid={userUuid}
+        assetId={assetId}
+        quizSetId={quizSetId}
+        quizList={currentQuizList}
+        onBack={() => setQuizView('asset')}
+        onFinish={({ result }) => {
+          // submit 응답 저장 후 result로 이동
+          console.log('[SUBMIT RESULT]', result)
+          setLatestAttemptDetail(result || null);
+          setQuizView('result');
+        }}
+      />
+    );
+  }
+
+  if (quizView === 'result') {
+    return (
+      <QuizResultScreen
+        userUuid={userUuid}
+        assetId={assetId}
+        quizSetId={quizSetId}
+        attemptDetail={latestAttemptDetail}
+        onClose={() => setQuizView('asset')}
+        onAiAnalyze={(attemptId) => {
+          setQuizAttemptIdForAi(attemptId ?? null)
+          setQuizView('ai')
+        }}
+      />
+    );
+  }
+
+  if (quizView === 'ai') {
+    return (
+      <QuizAnalysisScreen
+        userUuid={userUuid}
+        quizAttemptId={quizAttemptIdForAi}
+        onBack={() => setQuizView('result')}
+        onClose={() => setQuizView('asset')}
+      />
+    );
+  }
+
+  return null;
 }

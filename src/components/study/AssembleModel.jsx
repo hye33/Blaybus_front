@@ -1,6 +1,8 @@
 import { useGLTF } from '@react-three/drei'
 
 export function AssembleModel({ d = 0, model, ...props }) {
+  console.log(model.assetAssembledGlbUrl);
+  console.log(model.assetExplodedGlbUrl);
   const assemble = useGLTF(`${model.assetAssembledGlbUrl}`)
   const explode = useGLTF(`${model.assetExplodedGlbUrl}`)
   const partNames = assemble?.nodes && explode?.nodes
@@ -18,7 +20,6 @@ export function AssembleModel({ d = 0, model, ...props }) {
     <group
       position={[model.position.x, model.position.y, model.position.z]}
       rotation={[radian * model.rotation.x, radian * model.rotation.y, radian * model.rotation.z]}
-      scale={0.7}
       >
       {partNames.map(name => {
         const assembledPos = assemble.nodes[name].position.toArray()

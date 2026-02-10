@@ -3,6 +3,15 @@ import '../styles/WorkflowListScreen.css'
 import chevronDown from '../assets/chevron-down.png'
 import { WorkflowsAPI } from '../api/workflowsApi'
 
+const normalizeData = (d) => ({
+  nodes: (d?.nodes ?? []).map((n) => ({
+    ...n,
+    positionX: Math.round(Number(n.positionX ?? 0)),
+    positionY: Math.round(Number(n.positionY ?? 0)),
+  })),
+  edges: (d?.edges ?? []).map((e) => ({ ...e })),
+})
+
 export default function WorkflowListScreen({ onOpenWorkflow }) {
   const [items, setItems] = useState([])
   const [activeMenuId, setActiveMenuId] = useState(null)
@@ -80,18 +89,26 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
   const confirmCreate = async () => {
     const name = createName.trim()
     if (!name) return
-    const created = await WorkflowsAPI.create(name)
 
-    setItems((prev) => [
-      {
-        id: created.workflowId,
-        name: created.workflowName,
-        updatedAt: new Date().toISOString(),
-      },
-      ...prev,
-    ])
-    setCreateOpen(false)
-    onOpenWorkflow?.(created.workflowId)
+    try {
+      const created = await WorkflowsAPI.create(name)
+
+      setItems((prev) => [
+        {
+          id: created.workflowId,
+          name: created.workflowName,
+          // API 응답에 시간이 없으면 로컬 시간 사용
+          updatedAt: new Date().toISOString(), 
+          schemaVersion: created.schemaVersion ?? 1,
+        },
+        ...prev,
+      ])
+      setCreateOpen(false)
+      onOpenWorkflow?.(created.workflowId)
+    } catch (e) {
+      console.error(e)
+      // alert('워크플로우 생성에 실패했습니다.')
+    }
   }
 
   const openRenameModal = (wf) => {
@@ -114,25 +131,74 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
     const newName = renameValue.trim()
     if (!newName) return
 
-    // 이름만 바꾸려면: 상세 GET 해서 revision+data 가져온 뒤 PUT
-    const detail = await WorkflowsAPI.get(renameTarget.id)
-    await WorkflowsAPI.update(renameTarget.id, {
-      name: newName,
-      data: detail.data,
-      revision: detail.revision,
-    })
+    try {
+      // 1. 최신 데이터(revision) 확보
+      const detail = await WorkflowsAPI.get(renameTarget.id)
+      
+      console.log('이름 수정 시도:', { 
+        id: renameTarget.id, 
+        oldName: detail.workflowName, 
+        newName, 
+        revision: detail.revision 
+      })
 
-    setItems((prev) =>
-      prev.map((wf) => (wf.id === renameTarget.id ? { ...wf, name: newName, updatedAt: new Date().toISOString() } : wf))
-    )
-    setRenameTarget(null)
+      // const persistedData = detail.data ?? detail.workflowData ?? detail.workflow?.data
+
+      // 2. 업데이트 요청
+      const res = await WorkflowsAPI.rename(renameTarget.id, {
+        name: newName,
+        // data: normalizeData(detail.data), // 기존 노드/엣지 데이터 유지
+        revision: detail.revision, // 필수: 리비전 번호
+      })
+
+      // 3. 성공 시 목록 갱신
+      const serverTime = res?.updatedAt || new Date().toISOString()
+      setItems((prev) =>
+        prev.map((wf) =>
+          wf.id === renameTarget.id
+            ? { ...wf, name: res.workflowName ?? newName, updatedAt: serverTime }
+            : wf
+        )
+      )
+      setRenameTarget(null)
+    } catch (e) {
+      console.error('이름 수정 에러 상세:', e)
+      alert(`수정 실패: ${e.message || '서버 오류'}`)
+    }
   }
 
   const confirmDelete = async () => {
     if (!deleteTarget) return
-    await WorkflowsAPI.remove(deleteTarget.id)
-    setItems((prev) => prev.filter((wf) => wf.id !== deleteTarget.id))
-    setDeleteTarget(null)
+
+    try {
+      const detail = await WorkflowsAPI.get(deleteTarget.id)
+      const nodes = detail?.data?.nodes ?? []
+
+      for (const n of nodes) {
+        const clientNodeId = n.id
+        try {
+          const files = await WorkflowsAPI.listNodeFiles(deleteTarget.id, clientNodeId)
+          for (const f of files ?? []) {
+            await WorkflowsAPI.deleteNodeFile(deleteTarget.id, clientNodeId, f.nodeFileId)
+          }
+        } catch (e) {
+          // 파일 정리 실패해도 계속 진행(최대한 지워보기)
+        }
+      }
+
+      // 마지막에 워크플로우 삭제
+      await WorkflowsAPI.remove(deleteTarget.id)
+      setItems((prev) => prev.filter((wf) => wf.id !== deleteTarget.id))
+      setDeleteTarget(null)
+    } catch (e) {
+      console.error('삭제 에러 상세:', e)
+      if (e.status === 404) {
+         setItems((prev) => prev.filter((wf) => wf.id !== deleteTarget.id))
+         setDeleteTarget(null)
+      } else {
+         alert(`삭제 실패: ${e.message}`)
+      }
+    }
   }
 
   const isModalOpen = createOpen || !!renameTarget || !!deleteTarget
@@ -243,7 +309,7 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
             <div className="wfl__modalHeader">
               <div className="wfl__modalTitle">워크플로우 명 수정</div>
               <button type="button" className="wfl__modalClose" onClick={() => setRenameTarget(null)} aria-label="닫기">
-                ×
+                <span className="wfl__modalCloseIcon" />
               </button>
             </div>
 
@@ -294,7 +360,7 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
             <div className="wfl__modalHeader">
               <div className="wfl__modalTitle">새 워크플로우 생성</div>
               <button type="button" className="wfl__modalClose" onClick={() => setCreateOpen(false)} aria-label="닫기">
-                ×
+                <span className="wfl__modalCloseIcon" />
               </button>
             </div>
 

@@ -1,0 +1,147 @@
+.qa {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.qa__frame {
+  position: relative;
+  width: 100%;
+  flex: 1;
+
+  border: 1px solid var(--green-main);
+  border-radius: 10px;
+  padding: 3% 4%;
+  box-shadow: 0 0 24px rgba(248,140,220,0.1);
+
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* 로딩용 프레임(아무것도 없이 중앙 텍스트만) */
+.qa__frame--loading {
+  display: grid;
+  place-items: center;
+}
+
+.qa__loadingText {
+  color: rgba(255,255,255,0.75);
+  font-size: 20px;
+  letter-spacing: 0.2px;
+}
+
+/* 닫기 */
+.qa__close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  display: grid;
+  place-items: center;
+}
+
+.qa__closeIcon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--green-main);
+
+    -webkit-mask: url("../assets/x-square.png") no-repeat center / 28px 28px;
+    mask: url("../assets/x-square.png") no-repeat center / 28px 28px;
+}
+
+/* 내용 스크롤 (내용만 스크롤되게) */
+.qa__scroll {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* 스크롤바 */
+.qa__scroll::-webkit-scrollbar { width: 6px; }
+.qa__scroll::-webkit-scrollbar-thumb {
+  background: var(--green-main);
+  border-radius: 6px;
+}
+.qa__scroll::-webkit-scrollbar-track { background: transparent; }
+
+/* 총평 박스 */
+.qa__summaryBox {
+  width: 85%;
+  margin: 64px auto 0;
+
+  border: 1px solid rgba(248,140,220,0.65);
+  border-radius: 14px;
+  background: rgba(248,140,220,0.08);
+
+  padding: 3% 3%;
+  text-align: center;
+}
+
+.qa__summaryTitle {
+  color: rgba(248,140,220,0.95);
+  font-family: var(--font-main);
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.qa__summaryText {
+  color: rgba(255,255,255,0.8);
+  font-size: 20px;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+/* 섹션 */
+.qa__section {
+  width: 90%;
+  margin: 5% auto 0;
+}
+
+.qa__sectionTitle {
+  color: rgba(255,255,255,0.85);
+  font-family: var(--font-main);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+
+.qa__sectionBody {
+  color: rgba(255,255,255,0.75);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.9;
+  white-space: pre-line;
+}
+
+/* 에러 화면에서 닫기 버튼 */
+.qa__ghost {
+  margin-top: 18px;
+  height: 44px;
+  width: 180px;
+  border-radius: 999px;
+  cursor: pointer;
+
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.8);
+}
+
+.qa__center {
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.qa__loadingText {
+  color: rgba(255,255,255,0.75);
+  font-size: 20px;
+  letter-spacing: 0.2px;
+}
