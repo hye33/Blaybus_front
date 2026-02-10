@@ -115,6 +115,7 @@ export default function MemoViewer({ selectedModelId }) {
             console.error("error: ", error);
         }
         fetchMemo();
+        setSelectedMemo(null);
     };
 
     const addBookmark = async () => {
