@@ -1,22 +1,42 @@
-import React, { Suspense, useEffect, useState } from 'react'
-import { TransformControls, OrbitControls, Bounds } from '@react-three/drei'
-import { Environment } from '@react-three/drei'
+import React, { Suspense, useEffect, useState, useRef } from 'react'
+import { Canvas, useThree } from '@react-three/fiber' // useThree 추가
+import { OrbitControls, Bounds, Environment } from '@react-three/drei'
 import './ModelViewer.css'
 import resetIcon from '../../assets/icons/resetButton.png';
-import { Canvas } from '@react-three/fiber'
-import { useRef } from 'react'
 import SingleDescriptionPopup from './SingleDescriptionPopup';
 import axios from 'axios';
 import { PartModel } from './PartModel';
 
+// ★ 1. 카메라 상태 복원용 컴포넌트
+const CameraHandler = ({ controlsRef, storageKey }) => {
+    const { camera } = useThree();
+
+    useEffect(() => {
+        const savedState = localStorage.getItem(storageKey);
+
+        if (savedState && controlsRef.current) {
+            const { position, target } = JSON.parse(savedState);
+
+            // 저장된 위치로 카메라 이동
+            camera.position.set(position.x, position.y, position.z);
+            // 저장된 타겟(중심점)으로 설정
+            controlsRef.current.target.set(target.x, target.y, target.z);
+
+            controlsRef.current.update();
+        }
+    }, [storageKey, camera, controlsRef]);
+
+    return null;
+};
+
 export default function SingleModelViewer({ selectedModel, selectedPart, setIsSelected }) {
     const [popupOpen, setPopupOpen] = useState(false);
-    const [selected, setSelected] = useState(null)
-    const transformRef = useRef()
+    const [part, setPart] = useState([]);
 
     const controlsRef = useRef()
 
-    const [part, setPart] = useState([]);
+    // ★ 2. 각 부품별 고유 저장 키 생성 (모델ID + 부품ID)
+    const storageKey = `singlePartCamera_${selectedModel.assetId}_${selectedPart.partId}`;
 
     useEffect(() => {
         const getPart = async () => {
@@ -31,17 +51,31 @@ export default function SingleModelViewer({ selectedModel, selectedPart, setIsSe
         };
 
         getPart();
-    }, []);
+    }, [selectedModel.assetId, selectedPart.partId]); // 의존성 배열 보강
+
+    // ★ 3. 카메라 상태 저장 함수
+    const saveCameraState = () => {
+        if (controlsRef.current) {
+            const state = {
+                position: controlsRef.current.object.position,
+                target: controlsRef.current.target
+            };
+            localStorage.setItem(storageKey, JSON.stringify(state));
+        }
+    };
+
+    // 리셋 시 저장된 시점도 삭제 (원래 Bounds 뷰로 돌아가기 위함)
+    const handleReset = () => {
+        controlsRef.current?.reset();
+        localStorage.removeItem(storageKey);
+    };
 
     return (
-        <div style={{
-            width: '100%',
-            height: '100%'
-        }}>
+        <div style={{ width: '100%', height: '100%' }}>
             <div>
                 <button
                     className='reset-button'
-                    onClick={() => controlsRef.current?.reset()}
+                    onClick={handleReset}
                 >
                     <img src={resetIcon} alt="icon" />
                 </button>
@@ -56,14 +90,22 @@ export default function SingleModelViewer({ selectedModel, selectedPart, setIsSe
 
                 <button
                     className='zoom-button zoom-in-button'
-                    onClick={() => controlsRef.current?.dollyOut(1.2)}
+                    onClick={() => {
+                        controlsRef.current?.dollyOut(1.2);
+                        controlsRef.current?.update();
+                        saveCameraState(); // 줌 버튼 사용 시에도 저장
+                    }}
                 >
                     +
                 </button>
 
                 <button
                     className='zoom-button zoom-out-button'
-                    onClick={() => controlsRef.current?.dollyIn(1.2)}
+                    onClick={() => {
+                        controlsRef.current?.dollyIn(1.2);
+                        controlsRef.current?.update();
+                        saveCameraState(); // 줌 버튼 사용 시에도 저장
+                    }}
                 >
                     -
                 </button>
@@ -78,15 +120,26 @@ export default function SingleModelViewer({ selectedModel, selectedPart, setIsSe
 
             {popupOpen && <SingleDescriptionPopup selectedPart={part} setPopupOpen={setPopupOpen} />}
 
-            <Canvas id='model-canvas-view' camera={{ position: [2, 1, 2] }}
+            <Canvas id='model-canvas-view'
+                camera={{ position: [2, 1, 2] }}
                 gl={{ preserveDrawingBuffer: true }}
-                alpha={false}>
-                <OrbitControls makeDefault ref={controlsRef} target={[0, 0, 0]} />
-                {/* <color attach="background" args={['#141414']} /> */}
-                <Environment preset="apartment" />
+                alpha={false}
+            >
+                {/* ★ 4. 카메라 핸들러 배치 */}
+                <CameraHandler controlsRef={controlsRef} storageKey={storageKey} />
 
+                <OrbitControls
+                    makeDefault
+                    ref={controlsRef}
+                    target={[0, 0, 0]}
+                    onEnd={saveCameraState} /* ★ 5. 드래그 종료 시 저장 */
+                />
+
+                <Environment preset="apartment" />
                 <ambientLight intensity={1} />
-               
+
+                {/* Bounds는 초기 로드 시 모델을 화면에 꽉 차게 잡아주지만,
+                    CameraHandler가 실행되면 저장된 시점으로 덮어씌워집니다. */}
                 <Bounds fit clip observe margin={1.5}>
                     <Suspense fallback={null}>
                         {part.partGlbUrl && <PartModel glbUrl={part.partGlbUrl} />}
