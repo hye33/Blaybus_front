@@ -107,6 +107,7 @@ export default function AIAssistantViewer({ selectedModel }) {
                     },
                 });
             console.log('delete question: ', selectedModel.assetId);
+        fetchQuestion();
         } catch (error) {
             console.error("error: ", error);
         }
