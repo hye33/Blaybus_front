@@ -1,0 +1,236 @@
+.qr {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.qr__frame {
+  position: relative;
+  width: 100%;
+  flex: 1;
+
+  border: 1px solid var(--green-main);
+  border-radius: 10px;
+  padding: 3% 4%;
+  box-shadow: 0 0 24px rgba(248, 140, 220, 0.1);
+
+  overflow: hidden;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* 상단 고정 */
+.qr__header {
+  position: relative;
+  flex: 0 0 auto;
+  padding-bottom: 18px;
+}
+
+/* 닫기 */
+.qr__close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  display: grid;
+  place-items: center;
+}
+
+.qr__closeIcon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: var(--green-main);
+
+    -webkit-mask: url("../assets/x-square.png") no-repeat center / 28px 28px;
+    mask: url("../assets/x-square.png") no-repeat center / 28px 28px;
+}
+
+.qr__topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 5% 3%;
+  /* padding-right: 56px; close 버튼 자리 */
+}
+
+.qr__titleBox {
+  min-width: 0;
+}
+
+.qr__title {
+  font-family: var(--font-main);
+  font-size: 34px;
+  opacity: 0.9;
+  margin-bottom: 18px;
+}
+
+.qr__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 16px;
+}
+
+.qr__metaLine {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qr__aiBtn {
+  height: 46px;
+  width: 220px;
+  border-radius: 999px;
+
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+}
+
+.qr__aiBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.qr__hintLine {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.qr__error {
+  margin-top: 10px;
+  color: #ff9090;
+  font-size: 14px;
+}
+
+/* 아래 스크롤 영역(문제만 스크롤) */
+.qr__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 10px;
+  padding: 0 3%;
+}
+
+/* 스크롤바 */
+.qr__scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.qr__scroll::-webkit-scrollbar-thumb {
+  background: var(--green-main);
+  border-radius: 6px;
+}
+.qr__scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.qr__list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 카드 공통 */
+.qr__card {
+  border-radius: 18px;
+  padding: 22px 24px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.qr__card.is-correct {
+  border-color: rgba(120, 232, 117, 0.7);
+  box-shadow: 0 0 18px rgba(120, 232, 117, 0.08);
+}
+
+.qr__card.is-wrong {
+  border-color: rgba(248, 140, 220, 0.7);
+  box-shadow: 0 0 18px rgba(248, 140, 220, 0.08);
+}
+
+.qr__qTitle {
+  font-family: var(--font-main);
+  font-size: 18px;
+  opacity: 0.9;
+  margin-bottom: 14px;
+}
+
+.qr__opts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.qr__optRow {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.qr__bullet {
+  width: 18px;
+  opacity: 0.85;
+}
+
+.qr__optRow.is-answer .qr__optText {
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.qr__expTitle {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+
+.qr__expText {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+/* 빈 상태 */
+.qr__empty {
+  padding: 20px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.qr__emptySub {
+  margin-top: 10px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.qr__mark {
+  width: 20px;
+  display: inline-block;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.qr__optRow.is-answer .qr__optText {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  opacity: 0.95;
+}
+
+.qr__optRow.is-user .qr__optText {
+  opacity: 0.95;
+}
