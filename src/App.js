@@ -36,12 +36,14 @@ function App() {
       <Navbar
         tab={tab}
         setTab={(next) => {
+          if (next === 3) {
+            backToWorkflowList()
+          }
           setTab(next)
-          if (next === 2) backToWorkflowList()
         }}
         onClickLogo={() => {
-          setTab(0)
           backToWorkflowList()
+          setTab(0)
         }}
       />
       

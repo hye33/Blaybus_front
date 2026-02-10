@@ -26,7 +26,9 @@ export default function Navbar({ tab, setTab, onClickLogo }) {
           <button
             key={label}
             className={`nav__item ${tab === tabIdx ? 'is-active' : ''}`}
-            onClick={() => setTab(tabIdx)}
+            onClick={() => {
+              console.log('[NAV CLICK]', label, tabIdx)
+              setTab(tabIdx)}}
           >
             {label}
           </button>
