@@ -345,7 +345,7 @@ textarea {
     display: flex;
     align-items: center; */
 
-    width: 351px;
+    width: 90%;
     height: 51px;
     border: 1px solid var(--pink-main);
     border-radius: 100px;
