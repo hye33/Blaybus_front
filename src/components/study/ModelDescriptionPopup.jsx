@@ -5,7 +5,26 @@ import axios from 'axios';
 
 export default function ModelDescriptionPopup({ modelDetails, setPopupOpen }) {
     const parts = modelDetails.parts;
-    // 마저 이어서 연결 ㄱ
+
+    // 1. 초기값 null (아무것도 선택 안 된 상태)
+    const [selectedPartIndex, setSelectedPartIndex] = useState(null);
+
+    const handlePartClick = (index) => {
+        if (selectedPartIndex === index) {
+            // 이미 선택된 것을 다시 클릭 -> 선택 해제 (null)
+            setSelectedPartIndex(null);
+        } else {
+            // 새로운 것 선택
+            setSelectedPartIndex(index);
+        }
+    };
+
+    // 2. 화면에 표시할 데이터 로직 수정
+    // selectedPartIndex가 null이면 빈 배열 []을 반환하여 아무것도 그리지 않게 함
+    const displayedParts = selectedPartIndex !== null
+        ? [parts[selectedPartIndex]]
+        : [];
+
     return (
         <div className="description-viewer">
             <span className='model-name-text'>{modelDetails.assetName}</span>
@@ -22,7 +41,12 @@ export default function ModelDescriptionPopup({ modelDetails, setPopupOpen }) {
             <div className="part-images-container">
                 {parts.length > 0 && (
                     parts.map((part, index) => (
-                        <div className='part-image-box'>
+                        <div
+                            key={part.id || index}
+                            // 선택된 인덱스와 같으면 active 클래스 추가
+                            className={`part-image-box ${selectedPartIndex === index ? 'active' : ''}`}
+                            onClick={() => handlePartClick(index)}
+                        >
                             <img src={part.partThumbnailUrl} alt={part.partName} className='part-image' />
                         </div>
                     ))
@@ -39,8 +63,12 @@ export default function ModelDescriptionPopup({ modelDetails, setPopupOpen }) {
                     marginTop: '25px'
                 }}
             >
-                {parts && parts.length > 0 ? (
-                    parts.map((part, index) => (
+                {/* 3. 렌더링 로직
+                   displayedParts가 있을 때만 내용을 보여줍니다.
+                   선택된 게 없으면 displayedParts가 빈 배열이므로 아무것도 렌더링되지 않습니다.
+                */}
+                {displayedParts.length > 0 && (
+                    displayedParts.map((part, index) => (
                         <div className='selected-part-text-container' key={part.id || index}>
                             <div className='selected-part-name'>
                                 {part.partName}
@@ -50,8 +78,6 @@ export default function ModelDescriptionPopup({ modelDetails, setPopupOpen }) {
                             </div>
                         </div>
                     ))
-                ) : (
-                    <div className='no-data-text'>파츠 정보가 없습니다.</div>
                 )}
             </div>
         </div>

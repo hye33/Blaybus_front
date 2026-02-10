@@ -25,9 +25,9 @@ export default function MemoViewer({ selectedModelId }) {
 
     const changeSelectedMemo = (memo) => {
         setSelectedMemo(memo);
-        setTitle(memo.memoTitle);
-        setContent(memo.memoContents);
-        setIsImportant(memo.isImportant)
+        setTitle(memo.memoTitle || "");
+        setContent(memo.memoContents || "");
+        setIsImportant(memo.isImportant || false);
     }
 
     const fetchMemo = async () => {
@@ -148,8 +148,6 @@ export default function MemoViewer({ selectedModelId }) {
                             'isImportant': false,
                             'memoId': 0
                         }
-                        setTitle("")
-                        setContent("")
                         setMemoList([...memoList, newMemo]);
                         setIsNewMemo(true);
                         changeSelectedMemo(newMemo);

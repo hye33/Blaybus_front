@@ -3,7 +3,6 @@
     top: 100px;
     right: 30px;
     width: 30%;
-    height: 70%;
     background-color: #F88CDC0d;
     border: 1px solid var(--pink-main);
     border-radius: 10px;
@@ -77,6 +76,8 @@
     align-items: center;
     justify-content: center;
     background-color: #d9d9d933;
+
+    cursor: pointer;
 }
 
 .part-image-box.active {
