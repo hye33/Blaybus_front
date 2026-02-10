@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { TransformControls, OrbitControls } from '@react-three/drei'
+import React, { Suspense, useEffect, useState } from 'react'
+import { TransformControls, OrbitControls, Bounds } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import './ModelViewer.css'
 import resetIcon from '../../assets/icons/resetButton.png';
@@ -23,7 +23,7 @@ export default function SingleModelViewer({ selectedModel, selectedPart, setIsSe
             try {
                 const response = await axios.get(
                     `${process.env.REACT_APP_API_BASE_URL}/api/assets/${selectedModel.assetId}/parts/${selectedPart.partId}`);
-                    setPart(response.data);
+                setPart(response.data);
                 console.log(response);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -78,27 +78,20 @@ export default function SingleModelViewer({ selectedModel, selectedPart, setIsSe
 
             {popupOpen && <SingleDescriptionPopup selectedPart={part} setPopupOpen={setPopupOpen} />}
 
-            <Canvas camera={{ position: [2, 1, 2] }}>
-                <OrbitControls ref={controlsRef} target={[0, 0, 0]} maxDistance={5} />
+            <Canvas id='model-canvas-view' camera={{ position: [2, 1, 2] }}
+                gl={{ preserveDrawingBuffer: true }}
+                alpha={false}>
+                <OrbitControls makeDefault ref={controlsRef} target={[0, 0, 0]} />
                 {/* <color attach="background" args={['#141414']} /> */}
-                <axesHelper args={[200, 200, 200]} />
                 <Environment preset="apartment" />
 
                 <ambientLight intensity={1} />
-
-                {part.partGlbUrl && <PartModel glbUrl={part.partGlbUrl} />}
-
-                {selected && (
-                    <TransformControls
-                        ref={transformRef}
-                        object={selected}
-                        mode="translate"
-                        onMouseUp={() => {
-                            console.log('pos', selected.position)
-                            console.log('rot', selected.rotation)
-                        }}
-                    />
-                )}
+               
+                <Bounds fit clip observe margin={1.5}>
+                    <Suspense fallback={null}>
+                        {part.partGlbUrl && <PartModel glbUrl={part.partGlbUrl} />}
+                    </Suspense>
+                </Bounds>
 
             </Canvas>
         </div >

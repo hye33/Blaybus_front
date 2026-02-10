@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber'
-import React, { useEffect, useState } from 'react'
-import { TransformControls, OrbitControls } from '@react-three/drei'
+import React, { Suspense, useEffect, useState } from 'react'
+import { TransformControls, OrbitControls, Bounds } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import { useRef } from 'react'
 import './ModelViewer.css'
@@ -15,9 +15,10 @@ import { RobotArm } from '../models/Robot_Arm'
 import ModelDescriptionPopup from './ModelDescriptionPopup'
 import axios from 'axios'
 import { getUUID } from '../../uuid'
+import { AssembleModel } from './AssembleModel'
 
 
-export default function ModelViewer({ selectedModelId, mode, setMode }) {
+export default function ModelViewer({ selectedModel, mode, setMode }) {
     const [d, setD] = useState(0)
     const [x, setX] = useState(0)
     const [y, setY] = useState(0)
@@ -34,7 +35,7 @@ export default function ModelViewer({ selectedModelId, mode, setMode }) {
         const getModelDetails = async () => {
             try {
                 const response = await axios.get(
-                    `${process.env.REACT_APP_API_BASE_URL}/api/assets/${selectedModelId}`, {
+                    `${process.env.REACT_APP_API_BASE_URL}/api/assets/${selectedModel.assetId}`, {
                     headers: {
                         'X-USER-UUID': uuid,
                     },
@@ -124,37 +125,30 @@ export default function ModelViewer({ selectedModelId, mode, setMode }) {
 
             {popupOpen && <ModelDescriptionPopup modelDetails={modelDetails} setPopupOpen={setPopupOpen} />}
 
-            <div id='model-canvas-view' style={{width: '100%', height: '100%'}}>
+            <div id='model-canvas-view' style={{ width: '100%', height: '100%' }}>
                 <Canvas camera={{ position: [0, 1, 2] }}
                     gl={{ preserveDrawingBuffer: true }}
-                    alpha={false}
-                    >
-                    <OrbitControls ref={controlsRef} target={[0, 0, 0]} maxDistance={5} />
+                >
+                    <OrbitControls makeDefault ref={controlsRef} target={[0, 0, 0]} maxDistance={5} />
                     {/* <color attach="background" args={['#141414']} /> */}
                     {/* <axesHelper args={[200, 200, 200]} /> */}
                     <Environment preset="apartment" />
 
                     <ambientLight intensity={1} />
 
-                    {selected && (
-                        <TransformControls
-                            ref={transformRef}
-                            object={selected}
-                            mode="translate"
-                            onMouseUp={() => {
-                                console.log('pos', selected.position)
-                                console.log('rot', selected.rotation)
-                            }}
-                        />
-                    )}
-                    {selectedModelId === 1 && <Drone d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModelId === 2 && <LeafSpring d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModelId === 3 && <MachineVice d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModelId === 4 && <RobotArm d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModelId === 5 && <RobotGripper d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModelId === 6 && <Suspension d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModelId === 7 && <V4Engine d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {/* <Bounds fit clip observe margin={1.2}>
+                        <Suspense fallback={null}>
+                            {selectedModel && <AssembleModel d={d} model={modelDetails} />}
+                        </Suspense>
+                    </Bounds> */}
 
+                    {selectedModel === 1 && <Drone d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel === 2 && <LeafSpring d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel === 3 && <MachineVice d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel === 4 && <RobotArm d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel === 5 && <RobotGripper d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel === 6 && <Suspension d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel === 7 && <V4Engine d={d} x={x} y={y} z={z} onSelect={setSelected} />}
                 </Canvas>
             </div>
         </div>
