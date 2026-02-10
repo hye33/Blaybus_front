@@ -1,6 +1,7 @@
 import './App.css'
 import { useState } from 'react'
 
+import LandingScreen from './pages/LandingScreen.jsx'
 import HomeScreen from './pages/HomeScreen.jsx'
 import StudyScreen from './pages/StudyScreen.jsx'
 import WorkflowListScreen from './pages/WorkflowListScreen.jsx'
@@ -26,13 +27,9 @@ function App() {
     setActiveWorkflowId(null)
   }
 
-  // quiz
-  const [quizView, setQuizView] = useState('list')
-  const [selectedAssetId, setSelectedAssetId] = useState(null)
-  const [activeQuizSetId, setActiveQuizSetId] = useState(null)
-  const [quizResetKey, setQuizResetKey] = useState(0)
-
-  const userUuid = 'TEMP-USER-UUID'
+  if (tab === 0) {
+    return <LandingScreen onStart={() => setTab(1)} />
+  }
 
   return (
     <>
@@ -41,14 +38,17 @@ function App() {
         setTab={(next) => {
           setTab(next)
           if (next === 2) backToWorkflowList()
-          if (next === 3) setQuizResetKey((k) => k + 1)
+        }}
+        onClickLogo={() => {
+          setTab(0)
+          backToWorkflowList()
         }}
       />
       
       <main className="app-layout">
-        {tab === 0 && <HomeScreen setSelectedModel={setSelectedModel} setTab={setTab} />}
-        {tab === 1 && <StudyScreen selectedModel={selectedModel} />}
-        {tab === 2 && (
+        {tab === 1 && <HomeScreen setSelectedModel={setSelectedModel} setTab={setTab} />}
+        {tab === 2 && <StudyScreen selectedModel={selectedModel} />}
+        {tab === 3 && (
           workflowView === 'list'
           ? <WorkflowListScreen onOpenWorkflow={openWorkflow} />
           : (<WorkflowScreen
@@ -57,36 +57,7 @@ function App() {
               onOpenWorkflow={openWorkflow}
             />)
         )}
-        {tab === 3 && 
-        <QuizScreen
-          key={quizResetKey}
-          userUuid={userUuid}
-
-          // quizView={quizView}
-          // assetId={selectedAssetId}
-          // quizSetId={activeQuizSetId}
-
-          // onOpenQuizAsset={(assetId) => {
-          //   setSelectedAssetId(assetId)
-          //   setQuizView('quizAsset')
-          // }}
-
-          // onStartQuiz={(quizSetId) => {
-          //   setActiveQuizSetId(quizSetId)
-          //   setQuizView('play')
-          // }}
-
-          // onFinishQuiz={(quizSetId) => {
-          //   setActiveQuizSetId(quizSetId)
-          //   setQuizView('result')
-          // }}
-
-          // onBackQuizList={() => {
-          //   setQuizView('list')
-          //   setSelectedAssetId(null)
-          //   setActiveQuizSetId(null)
-          // }}
-        />}
+        {tab === 4 && <QuizScreen />}
       </main>
       
     </>
