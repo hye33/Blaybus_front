@@ -142,13 +142,13 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
                         </Suspense>
                     </Bounds> */}
 
-                    {selectedModel === 1 && <Drone d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 2 && <LeafSpring d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 3 && <MachineVice d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 4 && <RobotArm d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 5 && <RobotGripper d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 6 && <Suspension d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel === 7 && <V4Engine d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel.assetId === 1 && <Drone d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel.assetId === 2 && <LeafSpring d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel.assetId === 3 && <MachineVice d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel.assetId === 4 && <RobotArm d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel.assetId === 5 && <RobotGripper d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel.assetId === 6 && <Suspension d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    {selectedModel.assetId === 7 && <V4Engine d={d} x={x} y={y} z={z} onSelect={setSelected} />}
                 </Canvas>
             </div>
         </div>
