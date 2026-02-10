@@ -73,12 +73,6 @@ export default function SingleModelViewer({ selectedModel, selectedPart, setIsSe
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <div>
-                <button
-                    className='reset-button'
-                    onClick={handleReset}
-                >
-                    <img src={resetIcon} alt="icon" />
-                </button>
 
                 <button
                     className='back-button'
