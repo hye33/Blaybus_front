@@ -310,24 +310,24 @@ export default function WorkflowScreen({ workflowId, onOpenWorkflow }) {
 
   // autosave (PUT) + revision 갱신
   const saveTimer = useRef(null)
-//   useEffect(() => {
-//   if (revision == null) return
+  useEffect(() => {
+  if (revision == null) return
 
-//   if (skipNextSaveRef.current) {
-//     skipNextSaveRef.current = false
-//     return
-//   }
+  if (skipNextSaveRef.current) {
+    skipNextSaveRef.current = false
+    return
+  }
 
-//   if (saveTimer.current) clearTimeout(saveTimer.current)
+  if (saveTimer.current) clearTimeout(saveTimer.current)
 
-//   saveTimer.current = setTimeout(() => {
-//     saveWorkflow()
-//   }, 1000)
+  saveTimer.current = setTimeout(() => {
+    saveWorkflow()
+  }, 1000)
 
-//   return () => {
-//     if (saveTimer.current) clearTimeout(saveTimer.current)
-//   }
-// }, [nodes, edges, wfName, revision, saveWorkflow])
+  return () => {
+    if (saveTimer.current) clearTimeout(saveTimer.current)
+  }
+}, [nodes, edges, wfName, revision, saveWorkflow])
 
   return (
     <section className="wf">
@@ -353,10 +353,10 @@ export default function WorkflowScreen({ workflowId, onOpenWorkflow }) {
                   <button
                     key={wf.id}
                     type="button"
-                    className={`wfTop__item ${wf.id === workflowId ? 'is-active' : ''}`}
+                    className={`wfTop__item ${wf.id === wid ? 'is-active' : ''}`}
                     onClick={() => {
                       setWfMenuOpen(false)
-                      if (wf.id !== workflowId) onOpenWorkflow?.(wf.id)
+                      if (wf.id !== wid) onOpenWorkflow?.(wf.id)
                     }}
                   >
                     {wf.name}

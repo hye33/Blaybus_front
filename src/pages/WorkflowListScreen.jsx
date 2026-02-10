@@ -251,7 +251,16 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
               <div className="wfl__empty">워크플로우가 없습니다.</div>
             ) : (
               sortedItems.map((wf) => (
-                <button key={wf.id} type="button" className="wfl__row" onClick={() => onOpenWorkflow?.(wf.id)}>
+                <div
+                  key={wf.id}
+                  className="wfl__row"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => onOpenWorkflow?.(wf.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') onOpenWorkflow?.(wf.id)
+                  }}
+                >
                   <div className="wfl__rowMain">
                     <div className="wfl__name">{wf.name}</div>
                   </div>
@@ -295,7 +304,7 @@ export default function WorkflowListScreen({ onOpenWorkflow }) {
                       </div>
                     )}
                   </div>
-                </button>
+                </div>
               ))
             )}
           </div>
