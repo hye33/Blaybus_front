@@ -274,6 +274,10 @@ textarea {
     padding: 15px;
 }
 
+.ai-question-text {
+    padding-right: 20px;
+}
+
 .ai-container::-webkit-scrollbar {
     width: 4px;
 }
