@@ -51,11 +51,23 @@ export default function AIAssistantViewer({ selectedModel }) {
     }, []);
 
     const sendQuestion = async () => {
+        const currentQuestion = question;
+        const tempId = Date.now();
+        const tempChat = {
+            'aiChatId': tempId,
+            'question': currentQuestion,
+            'answer': '답변 받아오는 중...',
+            'isImportant': false,
+            'assetId': selectedModel.assetId
+        };
+        setAnswerList([tempChat, ...answerList]);
+        setQuestion("");
+
         try {
             const response = await axios.post(
                 `${process.env.REACT_APP_API_BASE_URL}/api/ai/chats/${selectedModel.assetId}`,
                 {
-                    question: `${question}`
+                    question: `${currentQuestion}`
                 },
                 {
                     headers: {
@@ -74,7 +86,11 @@ export default function AIAssistantViewer({ selectedModel }) {
                 'assetId': selectedModel.assetId
             };
 
-            setAnswerList([...answerList, newChat]);
+            setAnswerList(prevList =>
+                prevList.map(chat =>
+                    chat.aiChatId === tempId ? newChat : chat
+                )
+            );
 
         } catch (error) {
             console.error("스트리밍 에러!", error);
@@ -112,7 +128,7 @@ export default function AIAssistantViewer({ selectedModel }) {
 
             {/* 본문 */}
             <div className='ai-container'>
-                {answerList && answerList.map((chat) => (
+                {answerList && [...answerList].reverse().map((chat) => (
                     <AITextComponent
                         key={chat.aiChatId} // 리스트 렌더링 시 key는 필수입니다
                         chat={chat}

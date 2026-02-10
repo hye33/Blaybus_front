@@ -34,7 +34,7 @@ export default function StudyScreen({ selectedModel }) {
             {selectedModel != null &&
                 <>
                     <div style={{ width: '55vw', height: '100%', minWidth: 0 }}>
-                        {mode === 'assemble' && <ModelViewer selectedModelId={selectedModel.assetId} mode={mode} setMode={setMode} />}
+                        {mode === 'assemble' && <ModelViewer selectedModel={selectedModel} mode={mode} setMode={setMode} />}
                         {mode === 'single' && <SingleViewer selectedModel={selectedModel} mode={mode} setMode={setMode} />}
                     </div>
                     <div style={{ width: '20vw', height: '100%', marginLeft: 20 }}>
