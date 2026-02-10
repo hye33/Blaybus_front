@@ -15,21 +15,30 @@
 
 .nav__brand {
   display: flex;
-  align-items: baseline;
-  gap: 11px;
+  align-items: flex-start;
+  gap: 3px;
+
   font-family: var(--font-title);
   color: var(--green-main);
+
+  cursor: pointer;
 }
 
 .nav__logo {
-  width: 31px;
-  height: 30px;
+  width: 45px;
+  height: 45px;
+  display: block;
 }
 
 .nav__title {
   font-size: 40px;
   font-weight: 700;
   letter-spacing: 0.02em;
+
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  transform: translateY(2px);
 }
 
 .nav__menu {

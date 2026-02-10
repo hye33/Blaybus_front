@@ -4,7 +4,7 @@
   min-height: 100vh;
   overflow: hidden;
 
-  background: #0b0e12;
+  background: var(--bg-black);
 
   display: flex;
   align-items: center;
@@ -13,65 +13,95 @@
   box-sizing: border-box;
 }
 
-.ls::before,
-.ls::after {
+.ls::before{
   content: "";
   position: absolute;
   inset: -20%;
   z-index: 0;
   pointer-events: none;
-  filter: blur(40px);
-  opacity: 0.55;
+
+  background:
+    /* 2사분면: 초록(좌상) */
+    radial-gradient(1050px 780px at 24% 18%,
+      color-mix(in srgb, var(--green-main) 28%, transparent),
+      transparent 68%),
+
+    /* 4사분면: 핑크(우하) */
+    radial-gradient(1150px 820px at 78% 82%,
+      color-mix(in srgb, var(--pink-main) 26%, transparent),
+      transparent 70%),
+
+    /* 가운데를 살짝 눌러서 두 색이 바로 붙지 않게 */
+    radial-gradient(1000px 700px at 55% 50%,
+      rgba(0,0,0,0.10),
+      rgba(0,0,0,0.35) 72%),
+
+    /* 위쪽 하이라이트 */
+    linear-gradient(180deg,
+      rgba(255,255,255,0.06),
+      rgba(0,0,0,0.18));
+
+  filter: blur(30px);
   transform: translate3d(0,0,0);
+  opacity: 0.95;
+
+  animation: ls-bg-drift 28s ease-in-out infinite alternate;
 }
 
-.ls::before {
-  background:
-    radial-gradient(circle at 30% 30%,
-      color-mix(in srgb, var(--green-main) 35%, transparent),
-      transparent 60%),
-    radial-gradient(circle at 70% 60%,
-      color-mix(in srgb, var(--green-main) 22%, transparent),
-      transparent 62%),
-    radial-gradient(circle at 40% 80%,
-      rgba(248, 140, 220, 0.10),
-      transparent 60%);
-  animation: ls-drift-a 14s ease-in-out infinite alternate;
-}
-
-/* 살짝 어두운 흐름 + 보조 덩어리 */
-.ls::after {
-  background:
-    radial-gradient(circle at 60% 30%,
-      rgba(255, 255, 255, 0.06),
-      transparent 55%),
-    radial-gradient(circle at 20% 70%,
-      rgba(255, 255, 255, 0.04),
-      transparent 60%);
-  animation: ls-drift-b 18s ease-in-out infinite alternate;
-  opacity: 0.35;
-}
-
-.ls__bg {
+/* 비네팅 + 라이트 레이 */
+.ls::after{
+  content: "";
   position: absolute;
   inset: 0;
+  z-index: 0;
   pointer-events: none;
 
   background:
-    radial-gradient(900px 500px at 50% 40%,
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0) 60%),
-    radial-gradient(700px 400px at 50% 45%,
-      color-mix(in srgb, var(--green-main) 18%, transparent),
-      transparent 65%),
-    linear-gradient(180deg,
-      rgba(255, 255, 255, 0.03),
-      rgba(0, 0, 0, 0.15));
+    conic-gradient(from 210deg at 62% 52%,
+      rgba(255,255,255,0.10),
+      rgba(255,255,255,0.00) 28%,
+      rgba(255,255,255,0.06) 52%,
+      rgba(255,255,255,0.00) 74%,
+      rgba(255,255,255,0.08)),
+    radial-gradient(1200px 800px at 50% 45%,
+      rgba(0,0,0,0.00) 35%,
+      rgba(0,0,0,0.35) 70%,
+      rgba(0,0,0,0.65) 100%);
+
+  mix-blend-mode: soft-light;
+  opacity: 0.95;
+}
+
+.ls__grain{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  opacity: 0.10;
+
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.035) 0px,
+      rgba(255,255,255,0.035) 1px,
+      rgba(0,0,0,0.00) 2px,
+      rgba(0,0,0,0.00) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.02) 0px,
+      rgba(255,255,255,0.02) 1px,
+      rgba(0,0,0,0.00) 2px,
+      rgba(0,0,0,0.00) 5px
+    );
+
+  filter: blur(0.2px);
+  mix-blend-mode: overlay;
 }
 
 .ls__center {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 
   /* width: min(980px, 100%); */
   text-align: center;
@@ -80,45 +110,72 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
+
+  margin-top: 2%; /* 살짝 아래로 내림 */
 }
 
 .ls__logo {
-  width: min(340px, 70vw);
-  height: auto;
-  display: block;
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
 
-  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--green-main) 40%, transparent));
+  filter:
+    drop-shadow(0 0 12px rgba(255,255,255,0.08))
+    drop-shadow(0 0 12px rgba(120,232,117,0.18));
+}
+
+.ls__lookup {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 999px;
+}
+
+.ls__wordmark {
+  font-family: var(--font-title);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-size: 60px;
+  line-height: 1;
+  background: var(--green-to-pink-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  filter: drop-shadow(0 0 10px rgba(248,140,220,0.15));
 }
 
 .ls__title {
-  margin: 0;
+  margin: 6px 0 0 0;
   line-height: 1.25;
-
+  
   font-family: var(--font-main);
-  font-size: 36px;
+  font-size: clamp(22px, 2.3vw, 34px);
   font-weight: 700;
   color: var(--text);
+  text-shadow: 0 2px 18px rgba(0,0,0,0.35);
 }
 
 .ls__brand {
   color: var(--green-main);
-  text-shadow: 0 0 18px color-mix(in srgb, var(--green-main) 45%, transparent);
+  text-shadow: var(--green-box-shadow);
 }
 
 .ls__subtitle {
   margin: 0;
   /* max-width: 760px; */
-  line-height: 1.6;
-
+  line-height: 1.65;
   font-family: var(--font-main);
-  font-size: 24px;
+  font-size: clamp(13px, 1.15vw, 16px);
   font-weight: 300;
   color: var(--text);
+  text-shadow: 0 2px 18px rgba(0,0,0,0.25);
 }
 
 /* 시작하기 버튼 */
 .ls__cta {
-  margin-top: 24px;
+  margin-top: 12%;
   padding: 2% 12%;
   border-radius: 999px;
 
@@ -144,21 +201,12 @@
   opacity: 0.9;
 }
 
-@keyframes ls-drift-a {
-  0%   { transform: translate(-2%, -1%) rotate(0deg) scale(1); }
-  50%  { transform: translate(2%,  1%) rotate(6deg) scale(1.05); }
-  100% { transform: translate(-1%, 2%) rotate(-4deg) scale(1.02); }
-}
-
-@keyframes ls-drift-b {
-  0%   { transform: translate(1%,  2%) rotate(0deg) scale(1); }
-  50%  { transform: translate(-2%, -1%) rotate(-5deg) scale(1.03); }
-  100% { transform: translate(2%,  0%) rotate(4deg) scale(1.02); }
+@keyframes ls-bg-drift {
+  0%   { transform: translate(-2%, -1%) scale(1.02); }
+  50%  { transform: translate(2%,  1%) scale(1.04); }
+  100% { transform: translate(-1%, 2%) scale(1.03); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ls::before,
-  .ls::after {
-    animation: none;
-  }
+  .ls::before { animation: none; }
 }

@@ -1,20 +1,21 @@
-// import React from "react";
 import "../styles/LandingScreen.css";
 import logoSimvex from '../assets/logo_simvex.png'
 
 export default function LandingScreen({ onStart }) {
   return (
     <main className="ls">
-      <div className="ls__bg" aria-hidden="true" />
+      <div className="ls__grain" aria-hidden="true" />
 
       <section className="ls__center">
-        <img className="ls__logo" src={logoSimvex} alt="SIMVEX" />
+        <div className="ls__lookup">
+          <img className="ls__logo" src={logoSimvex} alt="SIMVEX" />
+          <span className="ls__wordmark">SIMVEX</span>
+        </div>
 
         <h1 className="ls__title">
           공학도들과 연구자분들을 위한 혁신적인 파트너 
           {" "}
           SIMVEX
-          {/* <span className="lsbrand">SIMVEX</span> */}
         </h1>
 
         <p className="ls__subtitle">

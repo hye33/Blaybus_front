@@ -1,5 +1,5 @@
 import './Navbar.css'
-import logo from '../../assets/logo.png'
+import logoSimvex from '../../assets/logo_simvex.png'
 
 export default function Navbar({ tab, setTab, onClickLogo }) {
   const items = [
@@ -17,7 +17,7 @@ export default function Navbar({ tab, setTab, onClickLogo }) {
         role='button'
         tabIndex={0}
       >
-        <img className="nav__logo" src={logo} alt="Logo" />
+        <img className="nav__logo" src={logoSimvex} alt="Logo" />
         <span className="nav__title">SIMVEX</span>
       </div>
 
