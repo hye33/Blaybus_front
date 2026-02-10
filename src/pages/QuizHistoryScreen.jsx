@@ -28,7 +28,7 @@ export default function QuizHistoryScreen({
 
   const leftTitle = useMemo(() => assetName || '배운 내용', [assetName])
   const leftDesc = useMemo(() => {
-    return `${assetName}에 대한 퀴즈입니다.\n총 ${QUESTION_COUNT}문제로 출제되며, 예상 소요 시간은 ${EST_MINUTES}분입니다.`
+    return `배운 내용에 대한 퀴즈입니다.\n총 ${QUESTION_COUNT}문제로 출제되며, 예상 소요 시간은 ${EST_MINUTES}분입니다.`
   }, [assetName])
   const leftMsg = useMemo(() => {
     return `반복은 완벽을 만듭니다.\n이전에 풀었던 퀴즈로 개념을 더 단단하게 다져보세요!`

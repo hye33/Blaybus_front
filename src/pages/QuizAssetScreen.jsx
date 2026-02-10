@@ -51,7 +51,7 @@ export default function QuizAssetScreen({
 
   const leftTitle = useMemo(() => assetName || '배운 내용', [assetName])
   const leftDesc = useMemo(() => {
-    return `${assetName}에 대한 퀴즈입니다.\n총 ${QUESTION_COUNT}문제로 출제되며, 예상 소요 시간은 ${EST_MINUTES}분입니다.`
+    return `배운 내용에 대한 퀴즈입니다.\n총 ${QUESTION_COUNT}문제로 출제되며, 예상 소요 시간은 ${EST_MINUTES}분입니다.`
   }, [assetName])
 
   // 새 퀴즈 생성 -> (quizSetId, quizList) 넘기기
