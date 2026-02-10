@@ -26,18 +26,16 @@ export default function AITextComponent({ key, chat }) {
     }
 
     return (
-        <div className='ai-container'>
-            <div className={`ai-text-container ${bookmark ? 'bookmark' : ''}`}>
-                <div className="ai-question-text">
-                    {chat.question}
-                </div>
-                <div className="ai-answer-text">
-                    {chat.answer != null ? chat.answer : '답변을 생성 중입니다...'}
-                </div>
-                <button className="ai-bookmark" onClick={() => { addBookmark(); setBookmark(!bookmark); }}>
-                    <img src={bookmark ? bookmarkFill : bookmarkEmpty} alt="" />
-                </button>
+        <div className={`ai-text-container ${bookmark ? 'bookmark' : ''}`}>
+            <div className="ai-question-text">
+                {chat.question}
             </div>
+            <div className="ai-answer-text">
+                {chat.answer != null ? chat.answer : '답변을 생성 중입니다...'}
+            </div>
+            <button className="ai-bookmark" onClick={() => { addBookmark(); setBookmark(!bookmark); }}>
+                <img src={bookmark ? bookmarkFill : bookmarkEmpty} alt="" />
+            </button>
         </div>
     )
 }

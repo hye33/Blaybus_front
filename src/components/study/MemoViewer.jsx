@@ -162,8 +162,13 @@ export default function MemoViewer({ selectedModelId }) {
             {/* 가로 스크롤뷰 */}
             <div className='memo-list-scrollview'>
                 {memoList && memoList.length > 0 && (
-                    memoList.map((memo) => (
-                        <MemoComponent key={memo.memoId} memo={memo} selectedMemo={selectedMemo} changeSelectedMemo={changeSelectedMemo} />
+                    [...memoList].reverse().map((memo) => (
+                        <MemoComponent
+                            key={memo.memoId}
+                            memo={memo}
+                            selectedMemo={selectedMemo}
+                            changeSelectedMemo={changeSelectedMemo}
+                        />
                     ))
                 )}
             </div>
@@ -176,7 +181,7 @@ export default function MemoViewer({ selectedModelId }) {
                 <textarea type='' className='memo-content-text' placeholder='본문'
                     value={content}
                     onChange={(e) => setContent(e.target.value)} />
-                <button className="memo-bookmark" onClick={() => {setIsImportant(!isImportant); addBookmark();}}>
+                <button className="memo-bookmark" onClick={() => { setIsImportant(!isImportant); addBookmark(); }}>
                     <img src={isImportant ? bookmarkFill : bookmarkEmpty} alt="" />
                 </button>
                 <button className="memo-save-button" onClick={() => saveMemo()}>
