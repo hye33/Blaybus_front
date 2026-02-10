@@ -13,6 +13,45 @@
   box-sizing: border-box;
 }
 
+.ls::before,
+.ls::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(40px);
+  opacity: 0.55;
+  transform: translate3d(0,0,0);
+}
+
+.ls::before {
+  background:
+    radial-gradient(circle at 30% 30%,
+      color-mix(in srgb, var(--green-main) 35%, transparent),
+      transparent 60%),
+    radial-gradient(circle at 70% 60%,
+      color-mix(in srgb, var(--green-main) 22%, transparent),
+      transparent 62%),
+    radial-gradient(circle at 40% 80%,
+      rgba(248, 140, 220, 0.10),
+      transparent 60%);
+  animation: ls-drift-a 14s ease-in-out infinite alternate;
+}
+
+/* 살짝 어두운 흐름 + 보조 덩어리 */
+.ls::after {
+  background:
+    radial-gradient(circle at 60% 30%,
+      rgba(255, 255, 255, 0.06),
+      transparent 55%),
+    radial-gradient(circle at 20% 70%,
+      rgba(255, 255, 255, 0.04),
+      transparent 60%);
+  animation: ls-drift-b 18s ease-in-out infinite alternate;
+  opacity: 0.35;
+}
+
 .ls__bg {
   position: absolute;
   inset: 0;
@@ -103,4 +142,23 @@
 .ls__cta:active {
   transform: translateY(0px);
   opacity: 0.9;
+}
+
+@keyframes ls-drift-a {
+  0%   { transform: translate(-2%, -1%) rotate(0deg) scale(1); }
+  50%  { transform: translate(2%,  1%) rotate(6deg) scale(1.05); }
+  100% { transform: translate(-1%, 2%) rotate(-4deg) scale(1.02); }
+}
+
+@keyframes ls-drift-b {
+  0%   { transform: translate(1%,  2%) rotate(0deg) scale(1); }
+  50%  { transform: translate(-2%, -1%) rotate(-5deg) scale(1.03); }
+  100% { transform: translate(2%,  0%) rotate(4deg) scale(1.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ls::before,
+  .ls::after {
+    animation: none;
+  }
 }
