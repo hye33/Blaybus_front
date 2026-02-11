@@ -1,6 +1,6 @@
 import { Canvas, useThree } from '@react-three/fiber'
 import React, { Suspense, useEffect, useState, useRef } from 'react'
-import { TransformControls, OrbitControls, Bounds } from '@react-three/drei'
+import { TransformControls, OrbitControls, Bounds, useBounds } from '@react-three/drei'
 import { Environment } from '@react-three/drei'
 import './ModelViewer.css'
 import resetIcon from '../../assets/icons/resetButton.png';
@@ -80,15 +80,34 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
         }
     };
 
-    const handleReset = () => {
-        // 카메라 초기화
-        controlsRef.current?.reset();
-        localStorage.removeItem(`cameraState_${selectedModel.assetId}`);
+    // const handleReset = () => {
+    //     // 카메라 초기화
+    //     controlsRef.current?.reset();
+    //     localStorage.removeItem(`cameraState_${selectedModel.assetId}`);
 
-        // 분해도 초기화
-        setD(0);
-        localStorage.removeItem(`explosionState_${selectedModel.assetId}`);
+    //     // 분해도 초기화
+    //     setD(0);
+    //     localStorage.removeItem(`explosionState_${selectedModel.assetId}`);
+    // };
+
+    const [resetSignal, setResetSignal] = useState(0);
+    // 리셋 시 저장된 시점도 삭제 (원래 Bounds 뷰로 돌아가기 위함)
+    const handleReset = () => {
+        setResetSignal(prev => prev + 1);
     };
+
+    function BoundsController({ doReset }) {
+        const bounds = useBounds();
+
+        useEffect(() => {
+            // doReset 값이 바뀔 때마다 실행 (버튼 눌렀을 때)
+            if (doReset) {
+                bounds.refresh().clip().fit();
+            }
+        }, [doReset, bounds]);
+
+        return null; // 화면엔 안 보임
+    }
 
     return (
         <div className='viewer'>
@@ -176,19 +195,24 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
                         ref={controlsRef}
                         target={[0, 0, 0]}
                         maxDistance={5}
-                        onEnd={saveCameraState} 
+                        onEnd={saveCameraState}
                     />
 
                     <Environment preset="apartment" />
                     <ambientLight intensity={1} />
 
-                    {selectedModel.assetId === 1 && <Drone d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel.assetId === 2 && <LeafSpring d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel.assetId === 3 && <MachineVice d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel.assetId === 4 && <RobotArm d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel.assetId === 5 && <RobotGripper d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel.assetId === 6 && <Suspension d={d} x={x} y={y} z={z} onSelect={setSelected} />}
-                    {selectedModel.assetId === 7 && <V4Engine d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                    <Bounds>
+                        {selectedModel.assetId === 1 && <Drone d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                        {selectedModel.assetId === 2 && <LeafSpring d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                        {selectedModel.assetId === 3 && <MachineVice d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                        {selectedModel.assetId === 4 && <RobotArm d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                        {selectedModel.assetId === 5 && <RobotGripper d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                        {selectedModel.assetId === 6 && <Suspension d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                        {selectedModel.assetId === 7 && <V4Engine d={d} x={x} y={y} z={z} onSelect={setSelected} />}
+                        <BoundsController doReset={resetSignal} />
+                    </Bounds>
+
+
                 </Canvas>
             </div>
         </div>
