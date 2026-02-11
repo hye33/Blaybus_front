@@ -48,7 +48,7 @@ button {
     -webkit-appearance: none;
     width: 16px;
     height: 16px;
-    background: #78E875;
+    background: var(--thumb-color, #3b82f6);
     border-radius: 50%;
     cursor: pointer;
     margin-top: -6px;
@@ -64,7 +64,7 @@ button {
 .range-slider::-moz-range-thumb {
     width: 16px;
     height: 16px;
-    background: #78E875;
+    background: var(--thumb-color, #3b82f6);
     border-radius: 50%;
     cursor: pointer;
 }
