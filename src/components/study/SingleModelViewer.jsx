@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useState, useRef } from 'react'
 import { Canvas, useThree } from '@react-three/fiber' // useThree 추가
-import { OrbitControls, Bounds, Environment } from '@react-three/drei'
+import { OrbitControls, Bounds, Environment, useBounds } from '@react-three/drei'
 import './ModelViewer.css'
 import resetIcon from '../../assets/icons/resetButton.png';
 import SingleDescriptionPopup from './SingleDescriptionPopup';
@@ -64,15 +64,34 @@ export default function SingleModelViewer({ selectedModel, selectedPart, setIsSe
         }
     };
 
+    const [resetSignal, setResetSignal] = useState(0);
     // 리셋 시 저장된 시점도 삭제 (원래 Bounds 뷰로 돌아가기 위함)
     const handleReset = () => {
-        controlsRef.current?.reset();
-        localStorage.removeItem(storageKey);
+        setResetSignal(prev => prev + 1);
     };
+
+    function BoundsController({ doReset }) {
+        const bounds = useBounds();
+
+        useEffect(() => {
+            // doReset 값이 바뀔 때마다 실행 (버튼 눌렀을 때)
+            if (doReset) {
+                bounds.refresh().clip().fit();
+            }
+        }, [doReset, bounds]);
+
+        return null; // 화면엔 안 보임
+    }
 
     return (
         <div style={{ width: '100%', height: '100%' }}>
             <div>
+                <button
+                    className='reset-button'
+                    onClick={handleReset}
+                >
+                    <img src={resetIcon} alt="icon" />
+                </button>
 
                 <button
                     className='back-button'
@@ -137,6 +156,8 @@ export default function SingleModelViewer({ selectedModel, selectedPart, setIsSe
                 <Bounds fit clip observe margin={1.5}>
                     <Suspense fallback={null}>
                         {part.partGlbUrl && <PartModel glbUrl={part.partGlbUrl} />}
+
+                        <BoundsController doReset={resetSignal} />
                     </Suspense>
                 </Bounds>
 
