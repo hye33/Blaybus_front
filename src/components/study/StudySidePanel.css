@@ -142,6 +142,10 @@ button {
     background: linear-gradient(0deg, #f88cdc1a, #f2bae41a);
 }
 
+.memo-content-text {
+    overflow: hidden;
+}
+
 .memo-title {
     color: var(--text);
     font-size: 16px;
