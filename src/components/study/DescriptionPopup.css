@@ -68,8 +68,9 @@
 }
 
 .part-image-box {
-    width: 87px;
-    height: 80px;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
     border-radius: 5px;
     overflow: hidden;
     display: flex;
@@ -126,11 +127,12 @@
 }
 
 .single-image-box {
-    width: 286px;
-    height: 268px;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     border-radius: 5px;
     align-items: center;
     justify-content: center;
     background-color: #d9d9d933;
     margin-top: 20px;
+    object-fit: cover;
 }

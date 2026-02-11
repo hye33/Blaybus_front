@@ -98,7 +98,7 @@ export default function SingleModelViewer({ selectedModel, selectedPart, setIsSe
                     style={{ color: '#78E875' }}
                     onClick={() => setIsSelected(false)}
                 >
-                    뒤로가기
+                    부품 선택
                 </button>
 
                 <button
