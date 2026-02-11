@@ -23,8 +23,8 @@ button {
     padding: 5px 20px;
     border-radius: 5px;
 
-    margin-bottom: 20px;
-    margin-left: 30px;
+    margin-bottom: 1em;
+    margin-left: 1.5em;
 }
 
 .side-panel-nav-item:hover {
