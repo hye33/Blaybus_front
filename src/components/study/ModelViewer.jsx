@@ -109,6 +109,20 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
         return null; // 화면엔 안 보임
     }
 
+    const getThumbColor = (value) => {
+        // 시작 색상 (파랑 계열: rgb(59, 130, 246))
+        const startColor = { r: 120, g: 232, b: 117 };
+        // 끝 색상 (빨강 계열: rgb(239, 68, 68))
+        const endColor = { r: 248, g: 140, b: 220 };
+
+        // 선형 보간 계산
+        const r = Math.round(startColor.r + (endColor.r - startColor.r) * value);
+        const g = Math.round(startColor.g + (endColor.g - startColor.g) * value);
+        const b = Math.round(startColor.b + (endColor.b - startColor.b) * value);
+
+        return `rgb(${r}, ${g}, ${b})`;
+    };
+
     return (
         <div className='viewer'>
             <div className='range-container'>
@@ -126,7 +140,7 @@ export default function ModelViewer({ selectedModel, mode, setMode }) {
                         localStorage.setItem(`explosionState_${selectedModel.assetId}`, val);
                     }}
                     className="range-slider"
-                    style={{ width: 308, height: 4, marginLeft: 15 }}
+                    style={{ width: 308, height: 4, marginLeft: 15, '--thumb-color': getThumbColor(d) }}
                 />
             </div>
 
