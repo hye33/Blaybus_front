@@ -131,6 +131,7 @@ button {
     flex-direction: column;
     justify-content: left;
     align-items: start;
+    overflow-x: hidden;
     overflow-y: hidden;
     padding: 20px;
     box-sizing: border-box;

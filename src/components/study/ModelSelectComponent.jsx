@@ -16,6 +16,7 @@ export default function ModelSelectComponent({ label, thumbnailUrl, onClick }) {
                 height: '100%',
                 backgroundColor: '#3e3e40',
                 borderRadius: '5px',
+                overflow: 'hidden'
             }}>
                 <img src={thumbnailUrl} alt="Model Thumbnail" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
